@@ -1,0 +1,364 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: |-
+      [
+        {
+          "apiVersion": "apis.portieris.io/v1alpha1",
+          "kind": "Portieris",
+          "metadata": {
+            "name": "portieris"
+          },
+          "spec": {
+            "AllowAdmissionSkip": false,
+            "IBMContainerService": false,
+            "SkipSecretCreation": false,
+            "UseCertManager": false,
+            "affinity": {
+              "podAntiAffinity": {
+                "preferredDuringSchedulingIgnoredDuringExecution": [
+                  {
+                    "podAffinityTerm": {
+                      "labelSelector": {
+                        "matchExpressions": [
+                          {
+                            "key": "app",
+                            "operator": "In",
+                            "values": [
+                              "portieris"
+                            ]
+                          }
+                        ]
+                      },
+                      "topologyKey": "kubernetes.io/hostname"
+                    },
+                    "weight": 50
+                  },
+                  {
+                    "podAffinityTerm": {
+                      "labelSelector": {
+                        "matchExpressions": [
+                          {
+                            "key": "app",
+                            "operator": "In",
+                            "values": [
+                              "portieris"
+                            ]
+                          }
+                        ]
+                      },
+                      "topologyKey": "failure-domain.beta.kubernetes.io/zone"
+                    },
+                    "weight": 50
+                  }
+                ]
+              }
+            },
+            "clusterPolicy": [
+              {
+                "name": "*"
+              }
+            ],
+            "image": {
+              "host": "icr.io/portieris",
+              "image": "portieris",
+              "pullPolicy": "Always",
+              "pullSecret": [],
+              "tag": "v0.10.0"
+            },
+            "name": "portieris",
+            "namespace": "portieris-operator-system",
+            "nodeSelector": {},
+            "replicaCount": 1,
+            "resources": {
+              "limits": {
+                "cpu": "400m",
+                "memory": "600Mi"
+              },
+              "requests": {
+                "cpu": "40m",
+                "memory": "60Mi"
+              }
+            },
+            "securityContext": {
+              "runAsUser": 1000060001
+            },
+            "selector": {
+              "app": "portieris"
+            },
+            "service": {
+              "metricsPort": 8080,
+              "metricsTargetPort": 8080,
+              "port": 443,
+              "targetPort": 8000,
+              "type": "ClusterIP"
+            },
+            "tolerations": [],
+            "webHooks": {
+              "failurePolicy": "Fail"
+            }
+          }
+        }
+      ]
+    capabilities: Basic Install
+    operators.operatorframework.io/builder: operator-sdk-v1.2.0
+    operators.operatorframework.io/project_layout: go.kubebuilder.io/v2
+  name: portieris-operator.v0.10.2
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - description: Portieris is the Schema for the portieris API
+      displayName: Portieris
+      kind: Portieris
+      name: portieris.apis.portieris.io
+      version: v1alpha1
+  description: Portieris Operator
+  displayName: Portieris Operator
+  icon:
+  - base64data: ""
+    mediatype: ""
+  install:
+    spec:
+      clusterPermissions:
+      - rules:
+        - apiGroups:
+          - admissionregistration.k8s.io
+          resources:
+          - mutatingwebhookconfigurations
+          verbs:
+          - '*'
+        - apiGroups:
+          - apiextensions.k8s.io
+          resources:
+          - customresourcedefinitions
+          verbs:
+          - '*'
+        - apiGroups:
+          - apis.portieris.io
+          resources:
+          - portieris
+          - portieris/finalizers
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - apis.portieris.io
+          resources:
+          - portieris/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - apps
+          resources:
+          - daemonsets
+          - deployments
+          - replicasets
+          - statefulsets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - apps
+          resources:
+          - deployments
+          - replicasets
+          verbs:
+          - get
+        - apiGroups:
+          - apps
+          resourceNames:
+          - portieris-operator
+          resources:
+          - deployments/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          - endpoints
+          - events
+          - persistentvolumeclaims
+          - pods
+          - secrets
+          - serviceaccounts
+          - services
+          - services/finalizers
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - namespaces
+          verbs:
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          verbs:
+          - get
+        - apiGroups:
+          - monitoring.coreos.com
+          resources:
+          - servicemonitors
+          verbs:
+          - create
+          - get
+        - apiGroups:
+          - policy
+          resources:
+          - podsecuritypolicies
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - portieris.cloud.ibm.com
+          resources:
+          - clusterimagepolicies
+          - imagepolicies
+          verbs:
+          - '*'
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - clusterrolebindings
+          - clusterroles
+          - rolebindings
+          - roles
+          verbs:
+          - '*'
+        - apiGroups:
+          - authentication.k8s.io
+          resources:
+          - tokenreviews
+          verbs:
+          - create
+        - apiGroups:
+          - authorization.k8s.io
+          resources:
+          - subjectaccessreviews
+          verbs:
+          - create
+        serviceAccountName: default
+      deployments:
+      - name: portieris-operator-controller-manager
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              control-plane: controller-manager
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                control-plane: controller-manager
+            spec:
+              containers:
+              - args:
+                - --secure-listen-address=0.0.0.0:8443
+                - --upstream=http://127.0.0.1:8080/
+                - --logtostderr=true
+                - --v=10
+                image: gcr.io/kubebuilder/kube-rbac-proxy:v0.5.0
+                name: kube-rbac-proxy
+                ports:
+                - containerPort: 8443
+                  name: https
+                resources: {}
+              - args:
+                - --metrics-addr=127.0.0.1:8080
+                - --enable-leader-election
+                command:
+                - /manager
+                image: quay.io/gajananan/portieris-operator:0.10.2
+                name: manager
+                resources:
+                  limits:
+                    cpu: 100m
+                    memory: 30Mi
+                  requests:
+                    cpu: 100m
+                    memory: 20Mi
+              terminationGracePeriodSeconds: 10
+      permissions:
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps/status
+          verbs:
+          - get
+          - update
+          - patch
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - create
+          - patch
+        serviceAccountName: default
+    strategy: deployment
+  installModes:
+  - supported: false
+    type: OwnNamespace
+  - supported: false
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - image integrity
+  links:
+  - name: Portieris Operator
+    url: https://portieris-operator.domain
+  maturity: alpha
+  provider:
+    name: IBM
+    url: https://github.ibm.com/rurikudo/portieris
+  replaces: portieris-operator.v0.10.0
+  version: 0.10.2

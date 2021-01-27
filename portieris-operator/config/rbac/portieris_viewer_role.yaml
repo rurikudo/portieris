@@ -1,0 +1,20 @@
+# permissions for end users to view portieris.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: portieris-viewer-role
+rules:
+- apiGroups:
+  - apis.portieris.io
+  resources:
+  - portieris
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apis.portieris.io
+  resources:
+  - portieris/status
+  verbs:
+  - get

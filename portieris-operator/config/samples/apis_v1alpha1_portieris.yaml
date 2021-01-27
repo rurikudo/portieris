@@ -1,0 +1,65 @@
+apiVersion: apis.portieris.io/v1alpha1
+kind: Portieris
+metadata:
+  name: portieris
+spec:
+  name: portieris
+  namespace: portieris-operator-system
+  AllowAdmissionSkip: false
+  IBMContainerService: false
+  SkipSecretCreation: false
+  UseCertManager: false
+  selector:
+    app: portieris
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+            - key: app
+              operator: In
+              values:
+              - portieris
+          topologyKey: kubernetes.io/hostname
+        weight: 50
+      - podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+            - key: app
+              operator: In
+              values:
+              - portieris
+          topologyKey: failure-domain.beta.kubernetes.io/zone
+        weight: 50
+  clusterPolicy:
+  - name: '*'
+  image:
+    host: icr.io/portieris
+    image: portieris
+    pullPolicy: Always
+    pullSecret: []
+    tag: v0.10.0
+  nodeSelector: {}
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: 400m
+      memory: 600Mi
+    requests:
+      cpu: 40m
+      memory: 60Mi
+  securityContext:
+    runAsUser: 1000060001
+  service:
+    metricsTargetPort: 8080
+    metricsPort: 8080
+    port: 443
+    targetPort: 8000
+    type: ClusterIP
+  tolerations: []
+  webHooks:
+    failurePolicy: Fail
+  securityContextConstraints: false
+  
+  

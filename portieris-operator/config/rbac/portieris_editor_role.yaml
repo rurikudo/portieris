@@ -1,0 +1,24 @@
+# permissions for end users to edit portieris.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: portieris-editor-role
+rules:
+- apiGroups:
+  - apis.portieris.io
+  resources:
+  - portieris
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apis.portieris.io
+  resources:
+  - portieris/status
+  verbs:
+  - get

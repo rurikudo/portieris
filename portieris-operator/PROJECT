@@ -1,0 +1,11 @@
+domain: portieris.io
+layout: go.kubebuilder.io/v2
+projectName: portieris-operator
+repo: github.com/rurikudo/portieris/portieris-operator
+resources:
+- group: apis
+  kind: Portieris
+  version: v1alpha1
+version: 3-alpha
+plugins:
+  go.sdk.operatorframework.io/v2-alpha: {}
