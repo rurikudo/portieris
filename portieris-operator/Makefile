@@ -126,3 +126,8 @@ bundle: manifests kustomize
 .PHONY: bundle-build
 bundle-build:
 	docker build -f bundle.Dockerfile -t $(BUNDLE_IMG) . --no-cache
+
+
+# logging
+log:
+	bash ./dev-scripts/log_operator.sh
