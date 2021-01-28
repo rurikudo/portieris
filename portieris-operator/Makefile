@@ -1,3 +1,23 @@
+# LOAD ENVIRNOMENT SETTINGS (must be done at first)
+###########################
+ifeq ($(PORTIERIS_REPO_ROOT),)
+$(error PORTIERIS_REPO_ROOT is not set)
+endif
+
+include .env
+export $(shell sed 's/=.*//' .env)
+
+ifeq ($(ENV_CONFIG),)
+$(error ENV_CONFIG is not set)
+endif
+
+include  $(ENV_CONFIG)
+export $(shell sed 's/=.*//' $(ENV_CONFIG))
+
+ifeq ($(PORTIERIS_OP_DIR),)
+$(error PORTIERIS_OP_DIR is not set)
+endif
+
 # Current Operator version
 VERSION ?= 0.0.1
 # Default bundle image tag
@@ -123,11 +143,19 @@ bundle: manifests kustomize
 	operator-sdk bundle validate ./bundle
 
 # Build the bundle image.
-.PHONY: bundle-build
-bundle-build:
-	docker build -f bundle.Dockerfile -t $(BUNDLE_IMG) . --no-cache
+# .PHONY: bundle-build
+# bundle-build:
+# 	docker build -f bundle.Dockerfile -t $(BUNDLE_IMG) . --no-cache
 
+############################################################
+# bundle section
+############################################################
 
+build-bundle:
+	$(PORTIERIS_OP_DIR)/build/build_bundle.sh
+
+############################################################
 # logging
+############################################################
 log:
 	bash ./dev-scripts/log_operator.sh

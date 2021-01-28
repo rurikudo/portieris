@@ -5,7 +5,7 @@ metadata:
   namespace: openshift-marketplace
 spec:
   displayName: Portieris Operator
-  image: quay.io/gajananan/portieris-operator-index:0.10.5
+  image: quay.io/gajananan/portieris-operator-index:0.10.7
   publisher: IBM
   sourceType: grpc
   updateStrategy:
