@@ -595,6 +595,8 @@ spec:
                       type: string
                   type: object
               type: object
+            securityContextConstraints:
+              type: boolean
             selector:
               additionalProperties:
                 type: string
