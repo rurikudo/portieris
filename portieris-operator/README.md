@@ -1,5 +1,6 @@
 # Portieris Operator
-Portieris can be deployed with operator.
+Portieris is a Kubernetes admission controller for the enforcment of image security policies. Portieris can be deployed with operator. You can install portieris in a few simple steps.
+
 ## Installing Portieris Operator
 
 0. move to portieris-operatar dir
@@ -60,7 +61,7 @@ I0128 05:39:25.029883       1 leaderelection.go:242] attempting to acquire leade
 You can configure Portieris custom resource to define the configuration of Portieris.
 #### Configuration of Portieris
 `AllowAdmissionSkip`: Allow an annotation to be used to skip the webhook.  
-`IBMContainerService`: If not running on IBM Cloud Container Service set to false. 
+`IBMContainerService`: If not running on IBM Cloud Container Service set to false.  
 `securityContextConstraints`: If you deploy portieris in local cluster(minikub/kind etc.), please set to `false`.
 ```
 apiVersion: apis.portieris.io/v1alpha1
