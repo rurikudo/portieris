@@ -32,7 +32,6 @@ type PortierisSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 	Name                       string                  `json:"name,omitempty"`
-	Namespace                  string                  `json:"namespace,omitempty"`
 	MetaLabels                 map[string]string       `json:"labels,omitempty"`
 	SelectorLabels             map[string]string       `json:"selector,omitempty"`
 	ReplicaCount               *int32                  `json:"replicaCount,omitempty"`
@@ -42,6 +41,7 @@ type PortierisSpec struct {
 	WebHooks                   WebHooks                `json:"webHooks,omitempty"`
 	IBMContainerService        bool                    `json:"IBMContainerService,omitempty"`
 	SkipSecretCreation         bool                    `json:"skipSecretCreation,omitempty"`
+	SecretName                 string                  `json:"secretName,omitempty"`
 	UseCertManager             bool                    `json:"useCertManager,omitempty"`
 	Resources                  v1.ResourceRequirements `json:"resources,omitempty"`
 	NodeSelector               map[string]string       `json:"nodeSelector,omitempty"`
@@ -130,7 +130,8 @@ func (self *Portieris) GetWebhookServiceName() string {
 }
 
 func (self *Portieris) GetWebhookServerTlsSecretName() string {
-	return "portieris-certs"
+	// "portieris-certs"
+	return self.Spec.SecretName
 }
 
 func (self *Portieris) GetPodSecurityPolicyName() string {

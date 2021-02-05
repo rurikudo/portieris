@@ -17,19 +17,19 @@
 package resources
 
 import (
-	policyV1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
+	policyv1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
 	apiv1alpha1 "github.com/rurikudo/portieris/portieris-operator/api/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func BuildDefaultImagePolicyForPortieris(cr *apiv1alpha1.Portieris) *policyV1.ImagePolicy {
-	policy := &policyV1.ImagePolicy{
+func BuildDefaultImagePolicyForPortieris(cr *apiv1alpha1.Portieris) *policyv1.ImagePolicy {
+	policy := &policyv1.ImagePolicy{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "default",
 			Namespace: cr.Namespace,
 		},
-		Spec: policyV1.ImagePolicySpec{
-			Repositories: []policyV1.Repository{
+		Spec: policyv1.ImagePolicySpec{
+			Repositories: []policyv1.Repository{
 				{
 					Name: cr.Spec.Image.Host + "/" + cr.Spec.Image.Image,
 				},
@@ -39,10 +39,10 @@ func BuildDefaultImagePolicyForPortieris(cr *apiv1alpha1.Portieris) *policyV1.Im
 	return policy
 }
 
-func BuildKubeSystemImagePolicyForPortieris(cr *apiv1alpha1.Portieris) *policyV1.ImagePolicy {
-	var repo []policyV1.Repository
+func BuildKubeSystemImagePolicyForPortieris(cr *apiv1alpha1.Portieris) *policyv1.ImagePolicy {
+	var repo []policyv1.Repository
 	if cr.Spec.IBMContainerService {
-		repo = []policyV1.Repository{
+		repo = []policyv1.Repository{
 			{
 				Name: "*",
 			},
@@ -75,33 +75,33 @@ func BuildKubeSystemImagePolicyForPortieris(cr *apiv1alpha1.Portieris) *policyV1
 			},
 		}
 	} else {
-		repo = []policyV1.Repository{
+		repo = []policyv1.Repository{
 			{
 				Name: "*",
 			},
 		}
 	}
 
-	policy := &policyV1.ImagePolicy{
+	policy := &policyv1.ImagePolicy{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "default",
 			Namespace: "kube-system",
 		},
-		Spec: policyV1.ImagePolicySpec{
+		Spec: policyv1.ImagePolicySpec{
 			Repositories: repo,
 		},
 	}
 	return policy
 }
 
-func BuildIBMSystemImagePolicyForPortieris(cr *apiv1alpha1.Portieris) *policyV1.ImagePolicy {
-	policy := &policyV1.ImagePolicy{
+func BuildIBMSystemImagePolicyForPortieris(cr *apiv1alpha1.Portieris) *policyv1.ImagePolicy {
+	policy := &policyv1.ImagePolicy{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "default",
 			Namespace: "ibm-system",
 		},
-		Spec: policyV1.ImagePolicySpec{
-			Repositories: []policyV1.Repository{
+		Spec: policyv1.ImagePolicySpec{
+			Repositories: []policyv1.Repository{
 				{
 					Name: "registry*.bluemix.net/armada/*",
 				},
@@ -138,13 +138,13 @@ func BuildIBMSystemImagePolicyForPortieris(cr *apiv1alpha1.Portieris) *policyV1.
 	return policy
 }
 
-func BuildClusterImagePolicyForPortieris(cr *apiv1alpha1.Portieris) *policyV1.ClusterImagePolicy {
-	policy := &policyV1.ClusterImagePolicy{
+func BuildClusterImagePolicyForPortieris(cr *apiv1alpha1.Portieris) *policyv1.ClusterImagePolicy {
+	policy := &policyv1.ClusterImagePolicy{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "default",
 			Namespace: cr.Namespace,
 		},
-		Spec: policyV1.ImagePolicySpec{
+		Spec: policyv1.ImagePolicySpec{
 			Repositories: cr.Spec.ClusterPolicies,
 		},
 	}
