@@ -22,6 +22,10 @@ import (
 
 	"github.com/go-logr/logr"
 	apisv1alpha1 "github.com/rurikudo/portieris/portieris-operator/api/v1alpha1"
+	admv1 "k8s.io/api/admissionregistration/v1beta1"
+	appsv1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
+	rbacv1 "k8s.io/api/rbac/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -70,6 +74,7 @@ func (r *PortierisReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 			return ctrl.Result{}, nil
 		}
 		// Error reading the object - requeue the request.
+		reqLogger.Error(err, " r.Get(ctx, req.NamespacedName, instance) ", instance.Name)
 		return ctrl.Result{}, err
 	}
 
@@ -109,10 +114,23 @@ func (r *PortierisReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	}
 
 	//Secret
-	recResult, recErr = r.createOrUpdateTlsSecret(instance)
-	if recErr != nil || recResult.Requeue {
-		return recResult, recErr
+	if !instance.Spec.SkipSecretCreation {
+		recResult, recErr = r.createOrUpdateTlsSecret(instance)
+		if recErr != nil || recResult.Requeue {
+			return recResult, recErr
+		}
 	}
+
+	// if instance.Spec.UseCertManager {
+	// 	recResult, recErr = r.createOrUpdateCertificate(instance)
+	// 	if recErr != nil || recResult.Requeue {
+	// 		return recResult, recErr
+	// 	}
+	// 	recResult, recErr = r.createOrUpdateIssuer(instance)
+	// 	if recErr != nil || recResult.Requeue {
+	// 		return recResult, recErr
+	// 	}
+	// }
 
 	//Service Account
 	recResult, recErr = r.createOrUpdateServiceAccount(instance)
@@ -176,5 +194,14 @@ func (r *PortierisReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 func (r *PortierisReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&apisv1alpha1.Portieris{}).
+		Owns(&apisv1alpha1.Portieris{}).
+		Owns(&appsv1.Deployment{}).
+		Owns(&rbacv1.ClusterRole{}).
+		Owns(&rbacv1.ClusterRoleBinding{}).
+		Owns(&admv1.MutatingWebhookConfiguration{}).
+		Owns(&corev1.Secret{}).
 		Complete(r)
 }
+
+// Owns(&imgpolicyv1.ClusterImagePolicy{}).
+// Owns(&scc.SecurityContextConstraints{}).

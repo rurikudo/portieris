@@ -129,23 +129,31 @@ func BuildDeploymentForPortieris(cr *apiv1alpha1.Portieris) *appsv1.Deployment {
 
 // EqualDeployments returns a Boolean
 func EqualDeployments(expected *appsv1.Deployment, found *appsv1.Deployment) bool {
-	if !EqualLabels(found.ObjectMeta.Labels, expected.ObjectMeta.Labels) {
+	// if !EqualLabels(found.ObjectMeta.Labels, expected.ObjectMeta.Labels) {
+	// 	return false
+	// }
+	if !EqualPods(expected.Spec.Template, found.Spec.Template) {
 		return false
 	}
-	if !EqualPods(expected.Spec.Template, found.Spec.Template) {
+	if !EqualReplicas(*expected.Spec.Replicas, *found.Spec.Replicas) {
 		return false
 	}
 	return true
 }
 
+// EqualReplicas returns a Boolean
+func EqualReplicas(expected int32, found int32) bool {
+	return expected == found
+}
+
 // EqualPods returns a Boolean
 func EqualPods(expected v1.PodTemplateSpec, found v1.PodTemplateSpec) bool {
-	if !EqualLabels(found.ObjectMeta.Labels, expected.ObjectMeta.Labels) {
-		return false
-	}
-	if !EqualAnnotations(found.ObjectMeta.Annotations, expected.ObjectMeta.Annotations) {
-		return false
-	}
+	// if !EqualLabels(found.ObjectMeta.Labels, expected.ObjectMeta.Labels) {
+	// 	return false
+	// }
+	// if !EqualAnnotations(found.ObjectMeta.Annotations, expected.ObjectMeta.Annotations) {
+	// 	return false
+	// }
 	if !reflect.DeepEqual(found.Spec.ServiceAccountName, expected.Spec.ServiceAccountName) {
 		return false
 	}

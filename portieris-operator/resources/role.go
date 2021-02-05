@@ -17,6 +17,7 @@
 package resources
 
 import (
+	"reflect"
 	"strings"
 
 	scc "github.com/openshift/api/security/v1"
@@ -188,4 +189,48 @@ func BuildSecurityContextConstraints(cr *apiv1alpha1.Portieris) *scc.SecurityCon
 		Users:              []string{user},
 		Volumes:            []scc.FSType{scc.FSTypeEmptyDir, scc.FSTypeSecret, scc.FSProjected, scc.FSTypeDownwardAPI, scc.FSTypePersistentVolumeClaim, scc.FSTypeConfigMap},
 	}
+}
+
+// EqualClusterRoleBindings returns a Boolean
+func EqualClusterRoleBindings(expected *rbacv1.ClusterRoleBinding, found *rbacv1.ClusterRoleBinding) bool {
+	// if !EqualLabels(found.ObjectMeta.Labels, expected.ObjectMeta.Labels) {
+	// 	return false
+	// }
+	if !reflect.DeepEqual(expected.RoleRef, found.RoleRef) {
+		return false
+	}
+	if !EqualSubjects(expected.Subjects, found.Subjects) {
+		return false
+	}
+	return true
+}
+
+// EqualSubjects returns a Boolean
+func EqualSubjects(expected []rbacv1.Subject, found []rbacv1.Subject) bool {
+	if len(expected) != len(found) {
+		return false
+	}
+	if !reflect.DeepEqual(expected[0], found[0]) {
+		return false
+	}
+	return true
+}
+
+// EqualRules returns a Boolean
+func EqualRules(expected []rbacv1.PolicyRule, found []rbacv1.PolicyRule) bool {
+	if len(expected) != len(found) {
+		return false
+	}
+	for i := range expected {
+		if !reflect.DeepEqual(expected[i].APIGroups, found[i].APIGroups) {
+			return false
+		}
+		if !reflect.DeepEqual(expected[i].Resources, found[i].Resources) {
+			return false
+		}
+		if !reflect.DeepEqual(expected[i].Verbs, found[i].Verbs) {
+			return false
+		}
+	}
+	return true
 }

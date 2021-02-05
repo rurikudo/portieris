@@ -8,6 +8,7 @@ spec:
   AllowAdmissionSkip: false
   IBMContainerService: false
   SkipSecretCreation: false
+  secretName: portieris-certs
   UseCertManager: false
   selector:
     app: portieris
