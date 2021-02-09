@@ -19,6 +19,7 @@ package main
 import (
 	"flag"
 	"os"
+	"time"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -55,6 +56,8 @@ func init() {
 func main() {
 	var metricsAddr string
 	var enableLeaderElection bool
+	var reaseduration = 30 * time.Second
+	var renewdeadline = 20 * time.Second
 	flag.StringVar(&metricsAddr, "metrics-addr", ":8080", "The address the metric endpoint binds to.")
 	flag.BoolVar(&enableLeaderElection, "enable-leader-election", false,
 		"Enable leader election for controller manager. "+
@@ -69,6 +72,8 @@ func main() {
 		Port:               9443,
 		LeaderElection:     enableLeaderElection,
 		LeaderElectionID:   "b463a212.portieris.io",
+		LeaseDuration:      &reaseduration,
+		RenewDeadline:      &renewdeadline,
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
