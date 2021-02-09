@@ -143,9 +143,9 @@ bundle: manifests kustomize
 	operator-sdk bundle validate ./bundle
 
 # Build the bundle image.
-# .PHONY: bundle-build
-# bundle-build:
-# 	docker build -f bundle.Dockerfile -t $(BUNDLE_IMG) . --no-cache
+.PHONY: bundle-build
+bundle-build:
+	docker build -f bundle.Dockerfile -t $(BUNDLE_IMG) . --no-cache
 
 ############################################################
 # bundle section
