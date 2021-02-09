@@ -4,7 +4,6 @@ metadata:
   name: portieris
 spec:
   name: portieris
-  namespace: portieris-operator-system
   AllowAdmissionSkip: false
   IBMContainerService: false
   SkipSecretCreation: false

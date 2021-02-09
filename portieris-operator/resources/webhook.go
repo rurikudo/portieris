@@ -28,7 +28,7 @@ import (
 func BuildServiceForPortieris(cr *apiv1alpha1.Portieris) *corev1.Service {
 	svc := &corev1.Service{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "portieris",
+			Name:      cr.GetWebhookServiceName(),
 			Namespace: cr.Namespace,
 		},
 		Spec: corev1.ServiceSpec{

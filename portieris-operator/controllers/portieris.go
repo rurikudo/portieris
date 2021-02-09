@@ -154,6 +154,8 @@ func (r *PortierisReconciler) createOrUpdateDefaultImagePolicyCR(instance *apiv1
 		return ctrl.Result{}, err
 	} else {
 		if !reflect.DeepEqual(expected.Spec, found.Spec) {
+			// If spec is incorrect, update it and requeue
+			reqLogger.Info("Try to update the resource...")
 			expected.ObjectMeta = found.ObjectMeta
 			err = r.Update(ctx, expected)
 			if err != nil {
@@ -206,6 +208,8 @@ func (r *PortierisReconciler) createOrUpdateKubeSystemImagePolicyCR(instance *ap
 		return ctrl.Result{}, err
 	} else {
 		if !reflect.DeepEqual(expected.Spec, found.Spec) {
+			// If spec is incorrect, update it and requeue
+			reqLogger.Info("Try to update the resource...")
 			expected.ObjectMeta = found.ObjectMeta
 			err = r.Update(ctx, expected)
 			if err != nil {
@@ -258,6 +262,8 @@ func (r *PortierisReconciler) createOrUpdateIBMSystemImagePolicyCR(instance *api
 		return ctrl.Result{}, err
 	} else {
 		if !reflect.DeepEqual(expected.Spec, found.Spec) {
+			// If spec is incorrect, update it and requeue
+			reqLogger.Info("Try to update the resource...")
 			expected.ObjectMeta = found.ObjectMeta
 			err = r.Update(ctx, expected)
 			if err != nil {
@@ -310,6 +316,8 @@ func (r *PortierisReconciler) createOrUpdateClusterImagePolicyCR(instance *apiv1
 		return ctrl.Result{}, err
 	} else {
 		if !reflect.DeepEqual(expected.Spec, found.Spec) {
+			// If spec is incorrect, update it and requeue
+			reqLogger.Info("Try to update the resource...")
 			expected.ObjectMeta = found.ObjectMeta
 			err = r.Update(ctx, expected)
 			if err != nil {
@@ -574,15 +582,6 @@ func (r *PortierisReconciler) createOrUpdateCertSecret(instance *apiv1alpha1.Por
 		return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 1}, nil
 	} else if err != nil {
 		return ctrl.Result{}, err
-	} else {
-		if !reflect.DeepEqual(expected, found) {
-			expected.ObjectMeta = found.ObjectMeta
-			err = r.Update(ctx, expected)
-			if err != nil {
-				reqLogger.Error(err, "Failed to update the resource")
-				return ctrl.Result{}, err
-			}
-		}
 	}
 
 	// No extra validation
@@ -763,8 +762,8 @@ func (r *PortierisReconciler) createOrUpdateDeployment(instance *apiv1alpha1.Por
 	} else if err != nil {
 		return ctrl.Result{}, err
 	} else if !res.EqualDeployments(expected, found) {
-		reqLogger.Info("If spec is incorrect, update it and requeue")
 		// If spec is incorrect, update it and requeue
+		reqLogger.Info("Try to update the resource...")
 		found.ObjectMeta.Labels = expected.ObjectMeta.Labels
 		found.Spec = expected.Spec
 		err = r.Update(ctx, found)
