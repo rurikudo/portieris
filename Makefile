@@ -1,16 +1,16 @@
 GOFILES=$(shell find . -type f -name '*.go' -not -path "./code-generator/*")
 GOPACKAGES=$(shell go list ./... | grep -v test/ | grep -v pkg/apis/)
 
-VERSION=v0.10.0
+VERSION=v0.10.1
 TAG=$(VERSION)
 GOTAGS='containers_image_openpgp'
 
 .PHONY: test
 
 image: 
-	docker build -t portieris:$(TAG) .
+	docker build --build-arg VERSION=$(VERSION) -t portieris:$(TAG) .
 
-push: image
+push:
 	docker tag portieris:$(TAG) $(HUB)/portieris:$(TAG)
 	docker push $(HUB)/portieris:$(TAG)
 
