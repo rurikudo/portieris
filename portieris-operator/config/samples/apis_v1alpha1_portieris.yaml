@@ -39,7 +39,7 @@ spec:
     image: portieris
     pullPolicy: Always
     pullSecret: []
-    tag: v0.10.0
+    tag: v0.10.1
   nodeSelector: {}
   replicaCount: 1
   resources:
@@ -60,6 +60,6 @@ spec:
   tolerations: []
   webHooks:
     failurePolicy: Fail
-  securityContextConstraints: false
+  securityContextConstraints: true
   
   
