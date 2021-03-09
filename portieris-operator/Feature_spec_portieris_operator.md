@@ -9,7 +9,7 @@
 - Implement bundle and CSV for installation from OLM / Operator Hub.
 
 
-**Describe alternatives you've considered**
+**Describe alternatives you've considered**  
 Helm Operator can be used to generate operator from Helm chart. 
 However, the post-install annotation used in Portieris Helm chart for configuring MutatingAdmissionWebhook does not work in Helm Operator. Actually, Helm Operator reconcile logic reverts the post-install changes with object expected from dry-run, which does not consider post-install steps.
 
