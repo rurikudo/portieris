@@ -139,13 +139,21 @@ func BuildIBMSystemImagePolicyForPortieris(cr *apiv1alpha1.Portieris) *policyv1.
 }
 
 func BuildClusterImagePolicyForPortieris(cr *apiv1alpha1.Portieris) *policyv1.ClusterImagePolicy {
+	var repositories []policyv1.Repository
+	for _, r := range cr.Spec.AllowedRepositories {
+		repository := policyv1.Repository{
+			Name: r,
+		}
+		repositories = append(repositories, repository)
+	}
+
 	policy := &policyv1.ClusterImagePolicy{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "default",
 			Namespace: cr.Namespace,
 		},
 		Spec: policyv1.ImagePolicySpec{
-			Repositories: cr.Spec.ClusterPolicies,
+			Repositories: repositories,
 		},
 	}
 	return policy

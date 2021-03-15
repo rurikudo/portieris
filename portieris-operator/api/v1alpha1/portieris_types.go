@@ -17,7 +17,6 @@
 package v1alpha1
 
 import (
-	policyV1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
 	admv1 "k8s.io/api/admissionregistration/v1beta1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -26,6 +25,10 @@ import (
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
+
+const (
+	CleanupFinalizerName = "cleanup.finalizers.portieris.io"
+)
 
 // PortierisSpec defines the desired state of Portieris
 type PortierisSpec struct {
@@ -48,7 +51,7 @@ type PortierisSpec struct {
 	Tolerations                []v1.Toleration         `json:"tolerations,omitempty"`
 	Affinity                   *v1.Affinity            `json:"affinity,omitempty"`
 	AllowAdmissionSkip         bool                    `json:"allowAdmissionSkip,omitempty"`
-	ClusterPolicies            []policyV1.Repository   `json:"clusterPolicy,omitempty"`
+	AllowedRepositories        []string                `json:"allowedRepositories,omitempty"`
 	SecurityContextConstraints bool                    `json:"securityContextConstraints,omitempty"`
 }
 

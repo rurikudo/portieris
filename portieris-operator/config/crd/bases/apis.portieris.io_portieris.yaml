@@ -612,94 +612,9 @@ spec:
               type: object
             allowAdmissionSkip:
               type: boolean
-            clusterPolicy:
+            allowedRepositories:
               items:
-                description: Repository .
-                properties:
-                  name:
-                    type: string
-                  policy:
-                    description: Policy .
-                    properties:
-                      simple:
-                        description: Simple .
-                        properties:
-                          requirements:
-                            items:
-                              description: SimpleRequirement .
-                              properties:
-                                keySecret:
-                                  type: string
-                                signedIdentity:
-                                  description: IdentityRequirement .
-                                  properties:
-                                    dockerReference:
-                                      type: string
-                                    dockerRepository:
-                                      type: string
-                                    prefix:
-                                      type: string
-                                    signedPrefix:
-                                      type: string
-                                    type:
-                                      type: string
-                                  required:
-                                  - dockerReference
-                                  - dockerRepository
-                                  - prefix
-                                  - signedPrefix
-                                  - type
-                                  type: object
-                                type:
-                                  type: string
-                              required:
-                              - keySecret
-                              - signedIdentity
-                              - type
-                              type: object
-                            type: array
-                          storeSecret:
-                            type: string
-                          storeURL:
-                            type: string
-                        required:
-                        - requirements
-                        - storeSecret
-                        - storeURL
-                        type: object
-                      trust:
-                        description: Trust .
-                        properties:
-                          enabled:
-                            type: boolean
-                          signerSecrets:
-                            items:
-                              description: TrustSigner .
-                              properties:
-                                name:
-                                  type: string
-                              required:
-                              - name
-                              type: object
-                            type: array
-                          trustServer:
-                            type: string
-                        type: object
-                      vulnerability:
-                        description: Vulnerability policy
-                        properties:
-                          ICCRVA:
-                            description: ICCRVA IBM Cloud Container Registry Vulnerability
-                              Advisor policy
-                            properties:
-                              account:
-                                type: string
-                              enabled:
-                                type: boolean
-                            type: object
-                        type: object
-                    type: object
-                type: object
+                type: string
               type: array
             image:
               properties:

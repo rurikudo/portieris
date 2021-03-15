@@ -99,6 +99,32 @@ func (r *PortierisReconciler) createOrUpdateCRD(instance *apiv1alpha1.Portieris,
 
 }
 
+func (r *PortierisReconciler) deleteCRD(instance *apiv1alpha1.Portieris, expected *extv1.CustomResourceDefinition) (ctrl.Result, error) {
+	ctx := context.Background()
+	found := &extv1.CustomResourceDefinition{}
+
+	reqLogger := r.Log.WithValues(
+		"Instance.Name", instance.Name,
+		"CustomResourceDefinition.Name", expected.Name)
+
+	err := r.Get(ctx, types.NamespacedName{Name: expected.Name}, found)
+
+	if err == nil {
+		reqLogger.Info(fmt.Sprintf("Deleting the IShield CustomResourceDefinition %s", expected.Name))
+		err = r.Delete(ctx, found)
+		if err != nil {
+			reqLogger.Error(err, fmt.Sprintf("Failed to delete the IShield CustomResourceDefinition %s", expected.Name))
+			return ctrl.Result{}, err
+		}
+		return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 1}, nil
+	} else if errors.IsNotFound(err) {
+		return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 1}, nil
+	} else {
+		return ctrl.Result{}, err
+	}
+
+}
+
 func (r *PortierisReconciler) createOrUpdateImagePolicyCRD(
 	instance *apiv1alpha1.Portieris) (ctrl.Result, error) {
 	expected := res.BuildImagePolicyCRD(instance)
@@ -109,6 +135,18 @@ func (r *PortierisReconciler) createOrUpdateClusterImagePolicyCRD(
 	instance *apiv1alpha1.Portieris) (ctrl.Result, error) {
 	expected := res.BuildClusterImagePolicyCRD(instance)
 	return r.createOrUpdateCRD(instance, expected)
+}
+
+func (r *PortierisReconciler) deleteImagePolicyCRD(
+	instance *apiv1alpha1.Portieris) (ctrl.Result, error) {
+	expected := res.BuildImagePolicyCRD(instance)
+	return r.deleteCRD(instance, expected)
+}
+
+func (r *PortierisReconciler) deleteClusterImagePolicyCRD(
+	instance *apiv1alpha1.Portieris) (ctrl.Result, error) {
+	expected := res.BuildClusterImagePolicyCRD(instance)
+	return r.deleteCRD(instance, expected)
 }
 
 /**********************************************
@@ -181,13 +219,6 @@ func (r *PortierisReconciler) createOrUpdateKubeSystemImagePolicyCR(instance *ap
 		"Instance.Name", instance.Name,
 		"Kube-SystemImagePolicy.Name", expected.Name)
 
-	// Set CR instance as the owner and controller
-	// err := controllerutil.SetControllerReference(instance, expected, r.Scheme)
-	// if err != nil {
-	// 	reqLogger.Error(err, "Failed to define expected resource")
-	// 	return ctrl.Result{}, err
-	// }
-
 	// If PodSecurityPolicy does not exist, create it and requeue
 	err := r.Get(ctx, types.NamespacedName{Name: expected.Name, Namespace: expected.Namespace}, found)
 
@@ -234,13 +265,6 @@ func (r *PortierisReconciler) createOrUpdateIBMSystemImagePolicyCR(instance *api
 	reqLogger := r.Log.WithValues(
 		"Instance.Name", instance.Name,
 		"IBMSystemImagePolicy.Name", expected.Name)
-
-	// Set CR instance as the owner and controller
-	// err := controllerutil.SetControllerReference(instance, expected, r.Scheme)
-	// if err != nil {
-	// 	reqLogger.Error(err, "Failed to define expected resource")
-	// 	return ctrl.Result{}, err
-	// }
 
 	// If PodSecurityPolicy does not exist, create it and requeue
 	err := r.Get(ctx, types.NamespacedName{Name: expected.Name, Namespace: instance.Namespace}, found)
@@ -435,6 +459,33 @@ func (r *PortierisReconciler) createOrUpdateClusterRole(instance *apiv1alpha1.Po
 
 }
 
+func (r *PortierisReconciler) deleteClusterRole(instance *apiv1alpha1.Portieris) (ctrl.Result, error) {
+	ctx := context.Background()
+	found := &rbacv1.ClusterRole{}
+	expected := res.BuildClusterRoleForPortieris(instance)
+	reqLogger := r.Log.WithValues(
+		"Instance.Name", instance.Name,
+		"ClusterRole.Name", expected.Name)
+
+	err := r.Get(ctx, types.NamespacedName{Name: expected.Name}, found)
+
+	if err == nil {
+		reqLogger.Info(fmt.Sprintf("Deleting the ClusterRole %s", expected.Name))
+		err = r.Delete(ctx, found)
+		if err != nil {
+			reqLogger.Error(err, fmt.Sprintf("Failed to delete the ClusterRole %s", expected.Name))
+			return ctrl.Result{}, err
+		}
+		return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 1}, nil
+	} else if errors.IsNotFound(err) {
+
+		return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 1}, nil
+	} else {
+		return ctrl.Result{}, err
+	}
+
+}
+
 func (r *PortierisReconciler) createOrUpdateClusterRoleBinding(instance *apiv1alpha1.Portieris) (ctrl.Result, error) {
 	ctx := context.Background()
 	expected := res.BuildClusterRoleBindingForPortieris(instance)
@@ -487,6 +538,33 @@ func (r *PortierisReconciler) createOrUpdateClusterRoleBinding(instance *apiv1al
 
 }
 
+func (r *PortierisReconciler) deleteClusterRoleBinding(instance *apiv1alpha1.Portieris) (ctrl.Result, error) {
+	ctx := context.Background()
+	found := &rbacv1.ClusterRoleBinding{}
+	expected := res.BuildClusterRoleBindingForPortieris(instance)
+
+	reqLogger := r.Log.WithValues(
+		"Instance.Name", instance.Name,
+		"ClusterRoleBinding.Name", expected.Name)
+
+	err := r.Get(ctx, types.NamespacedName{Name: expected.Name}, found)
+
+	if err == nil {
+		reqLogger.Info(fmt.Sprintf("Deleting the ClusterRoleBinding %s", expected.Name))
+		err = r.Delete(ctx, found)
+		if err != nil {
+			reqLogger.Error(err, fmt.Sprintf("Failed to delete the ClusterRoleBinding %s", expected.Name))
+			return ctrl.Result{}, err
+		}
+		return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 1}, nil
+	} else if errors.IsNotFound(err) {
+		return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 1}, nil
+	} else {
+		return ctrl.Result{}, err
+	}
+
+}
+
 func (r *PortierisReconciler) createOrUpdateSecurityContextConstraints(instance *apiv1alpha1.Portieris) (ctrl.Result, error) {
 	ctx := context.Background()
 	expected := res.BuildSecurityContextConstraints(instance)
@@ -536,6 +614,33 @@ func (r *PortierisReconciler) createOrUpdateSecurityContextConstraints(instance 
 
 	// No reconcile was necessary
 	return ctrl.Result{}, nil
+
+}
+
+func (r *PortierisReconciler) deleteSecurityContextConstraints(instance *apiv1alpha1.Portieris) (ctrl.Result, error) {
+	ctx := context.Background()
+	found := &scc.SecurityContextConstraints{}
+	expected := res.BuildSecurityContextConstraints(instance)
+
+	reqLogger := r.Log.WithValues(
+		"Instance.Name", instance.Name,
+		"SecurityContextConstraints.Name", expected.Name)
+
+	err := r.Get(ctx, types.NamespacedName{Name: expected.Name}, found)
+
+	if err == nil {
+		reqLogger.Info(fmt.Sprintf("Deleting the SCC %s", expected.Name))
+		err = r.Delete(ctx, found)
+		if err != nil {
+			reqLogger.Error(err, fmt.Sprintf("Failed to delete the SCC %s", expected.Name))
+			return ctrl.Result{}, err
+		}
+		return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 1}, nil
+	} else if errors.IsNotFound(err) {
+		return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 1}, nil
+	} else {
+		return ctrl.Result{}, err
+	}
 
 }
 
