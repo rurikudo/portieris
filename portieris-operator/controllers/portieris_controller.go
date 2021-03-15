@@ -80,6 +80,27 @@ func (r *PortierisReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	var recResult ctrl.Result
 	var recErr error
 
+	// Portieris is under deletion - finalizer step
+	if !instance.ObjectMeta.DeletionTimestamp.IsZero() {
+		if containsString(instance.ObjectMeta.Finalizers, apisv1alpha1.CleanupFinalizerName) {
+			if err := r.deleteClusterScopedChildrenResources(instance); err != nil {
+				// if fail to delete the external dependency here, return with error
+				// so that it can be retried
+				reqLogger.Error(err, "Error occured during finalizer process. retrying soon.")
+				return ctrl.Result{}, err
+			}
+
+			// remove our finalizer from the list and update it.
+			instance.ObjectMeta.Finalizers = removeString(instance.ObjectMeta.Finalizers, apisv1alpha1.CleanupFinalizerName)
+			if err := r.Update(context.Background(), instance); err != nil {
+				return ctrl.Result{}, err
+			}
+		}
+		return ctrl.Result{}, nil
+	}
+
+	// otherwise, normal reconcile
+
 	// Custom Resource Definition (CRD)
 	recResult, recErr = r.createOrUpdateImagePolicyCRD(instance)
 	if recErr != nil || recResult.Requeue {
@@ -203,3 +224,66 @@ func (r *PortierisReconciler) SetupWithManager(mgr ctrl.Manager) error {
 
 // Owns(&imgpolicyv1.ClusterImagePolicy{}).
 // Owns(&scc.SecurityContextConstraints{}).
+
+func (r *PortierisReconciler) deleteClusterScopedChildrenResources(instance *apisv1alpha1.Portieris) error {
+	// delete any cluster scope resources owned by the instance
+	// (In Iubernetes 1.20 and later, a garbage collector ignore cluster scope children even if their owner is deleted)
+	var err error
+	_, err = r.deleteWebhook(instance)
+	if err != nil {
+		return err
+	}
+	// _, err = r.deletePodSecurityPolicy(instance)
+	// if err != nil {
+	// 	return err
+	// }
+
+	// SCC
+	if instance.Spec.SecurityContextConstraints {
+		_, err = r.deleteSecurityContextConstraints(instance)
+		if err != nil {
+			return err
+		}
+	}
+
+	_, err = r.deleteClusterRoleBinding(instance)
+	if err != nil {
+		return err
+	}
+	_, err = r.deleteClusterRole(instance)
+	if err != nil {
+		return err
+	}
+
+	_, err = r.deleteClusterImagePolicyCRD(instance)
+	if err != nil {
+		return err
+	}
+
+	_, err = r.deleteImagePolicyCRD(instance)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Helper functions to check and remove string from a slice of strings.
+func containsString(slice []string, s string) bool {
+	for _, item := range slice {
+		if item == s {
+			return true
+		}
+	}
+	return false
+}
+
+func removeString(slice []string, s string) (result []string) {
+	for _, item := range slice {
+		if item == s {
+			continue
+		}
+		result = append(result, item)
+	}
+	return
+}

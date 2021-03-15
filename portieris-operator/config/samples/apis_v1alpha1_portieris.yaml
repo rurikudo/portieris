@@ -2,6 +2,8 @@ apiVersion: apis.portieris.io/v1alpha1
 kind: Portieris
 metadata:
   name: portieris
+  finalizers:
+    - cleanup.finalizers.portieris.io
 spec:
   name: portieris
   AllowAdmissionSkip: false
@@ -32,8 +34,8 @@ spec:
               - portieris
           topologyKey: failure-domain.beta.kubernetes.io/zone
         weight: 50
-  clusterPolicy:
-  - name: '*'
+  allowedRepositories:
+  - '*'
   image:
     host: icr.io/portieris
     image: portieris
