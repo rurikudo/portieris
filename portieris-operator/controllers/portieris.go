@@ -268,7 +268,7 @@ func (r *PortierisReconciler) createOrUpdateIBMSystemImagePolicyCR(instance *api
 		"IBMSystemImagePolicy.Name", expected.Name)
 
 	// If PodSecurityPolicy does not exist, create it and requeue
-	err := r.Get(ctx, types.NamespacedName{Name: expected.Name, Namespace: instance.Namespace}, found)
+	err := r.Get(ctx, types.NamespacedName{Name: expected.Name, Namespace: expected.Namespace}, found)
 
 	if err != nil && errors.IsNotFound(err) {
 		reqLogger.Info("Creating a new resource")

@@ -8,13 +8,13 @@ metadata:
           "apiVersion": "apis.portieris.io/v1alpha1",
           "kind": "Portieris",
           "metadata": {
+            "finalizers": [
+              "cleanup.finalizers.portieris.io"
+            ],
             "name": "portieris"
           },
           "spec": {
-            "AllowAdmissionSkip": false,
             "IBMContainerService": false,
-            "SkipSecretCreation": false,
-            "UseCertManager": false,
             "affinity": {
               "podAntiAffinity": {
                 "preferredDuringSchedulingIgnoredDuringExecution": [
@@ -55,10 +55,9 @@ metadata:
                 ]
               }
             },
-            "clusterPolicy": [
-              {
-                "name": "*"
-              }
+            "allowAdmissionSkip": false,
+            "allowedRepositories": [
+              "*"
             ],
             "image": {
               "host": "icr.io/portieris",
@@ -95,7 +94,9 @@ metadata:
               "targetPort": 8000,
               "type": "ClusterIP"
             },
+            "skipSecretCreation": false,
             "tolerations": [],
+            "useCertManager": false,
             "webHooks": {
               "failurePolicy": "Fail"
             }
@@ -105,7 +106,7 @@ metadata:
     capabilities: Basic Install
     operators.operatorframework.io/builder: operator-sdk-v1.2.0
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v2
-  name: portieris-operator.v0.10.12
+  name: portieris-operator.v0.10.13
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -188,6 +189,14 @@ spec:
                 - deployments/finalizers
               verbs:
                 - update
+            - apiGroups:
+                - cert-manager.io
+              resources:
+                - certificaterequests
+                - certificates
+                - issuers
+              verbs:
+                - '*'
             - apiGroups:
                 - ""
               resources:
@@ -296,7 +305,7 @@ spec:
                       - --enable-leader-election
                     command:
                       - /manager
-                    image: quay.io/gajananan/portieris-operator:0.10.12
+                    image: quay.io/gajananan/portieris-operator:0.10.13
                     name: manager
                     resources:
                       limits:
@@ -355,4 +364,4 @@ spec:
   provider:
     name: IBM
     url: https://github.ibm.com/rurikudo/portieris
-  version: 0.10.12
+  version: 0.10.13
