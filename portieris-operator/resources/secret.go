@@ -17,50 +17,50 @@
 package resources
 
 import (
-	// certmanager "github.com/jetstack/cert-manager/pkg/apis/certmanager/v1alpha2"
-	// cmmeta "github.com/jetstack/cert-manager/pkg/apis/meta/v1"
+	cmapiv1alpha2 "github.com/jetstack/cert-manager/pkg/apis/certmanager/v1alpha2"
+	cmmeta "github.com/jetstack/cert-manager/pkg/apis/meta/v1"
 	apiv1alpha1 "github.com/rurikudo/portieris/portieris-operator/api/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// // //cert manager certificate
-// func BuildCertificateForPortieris(cr *apiv1alpha1.Portieris) *certmanager.Certificate {
-// 	dnsname := "portieris." + cr.Namespace + ".svc"
-// 	cert := &certmanager.Certificate{
-// 		ObjectMeta: metav1.ObjectMeta{
-// 			Name:      "portieris-certs",
-// 			Namespace: cr.Namespace,
-// 		},
-// 		Spec: certmanager.CertificateSpec{
-// 			DNSNames: []string{
-// 				dnsname,
-// 			},
-// 			SecretName: cr.GetWebhookServerTlsSecretName(),
-// 			IssuerRef: cmmeta.ObjectReference{
-// 				Name: "portieris",
-// 			},
-// 		},
-// 	}
-// 	return cert
-// }
+// //cert manager certificate
+func BuildCertificateForPortieris(cr *apiv1alpha1.Portieris) *cmapiv1alpha2.Certificate {
+	dnsname := "portieris." + cr.Namespace + ".svc"
+	cert := &cmapiv1alpha2.Certificate{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "portieris-certs",
+			Namespace: cr.Namespace,
+		},
+		Spec: cmapiv1alpha2.CertificateSpec{
+			DNSNames: []string{
+				dnsname,
+			},
+			SecretName: cr.GetWebhookServerTlsSecretName(),
+			IssuerRef: cmmeta.ObjectReference{
+				Name: "portieris",
+			},
+		},
+	}
+	return cert
+}
 
-// //cert manager issuer
-// func BuildIssuerForPortieris(cr *apiv1alpha1.Portieris) *certmanager.Issuer {
-// 	selfsigned := &certmanager.SelfSignedIssuer{}
-// 	issuer := &certmanager.Issuer{
-// 		ObjectMeta: metav1.ObjectMeta{
-// 			Name:      "portieris",
-// 			Namespace: cr.Namespace,
-// 		},
-// 		Spec: certmanager.IssuerSpec{
-// 			IssuerConfig: certmanager.IssuerConfig{
-// 				SelfSigned: selfsigned,
-// 			},
-// 		},
-// 	}
-// 	return issuer
-// }
+//cert manager issuer
+func BuildIssuerForPortieris(cr *apiv1alpha1.Portieris) *cmapiv1alpha2.Issuer {
+	selfsigned := &cmapiv1alpha2.SelfSignedIssuer{}
+	issuer := &cmapiv1alpha2.Issuer{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "portieris",
+			Namespace: cr.Namespace,
+		},
+		Spec: cmapiv1alpha2.IssuerSpec{
+			IssuerConfig: cmapiv1alpha2.IssuerConfig{
+				SelfSigned: selfsigned,
+			},
+		},
+	}
+	return issuer
+}
 
 // ishield-server-tls
 func BuildTlsSecretForPortieris(cr *apiv1alpha1.Portieris) *corev1.Secret {

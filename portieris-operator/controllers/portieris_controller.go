@@ -56,6 +56,7 @@ type PortierisReconciler struct {
 // +kubebuilder:rbac:groups=admissionregistration.k8s.io,resources=mutatingwebhookconfigurations,verbs=*
 // +kubebuilder:rbac:groups=portieris.cloud.ibm.com,resources=clusterimagepolicies;imagepolicies,verbs=*
 // +kubebuilder:rbac:groups=security.openshift.io,resources=securitycontextconstraints,verbs=*
+// +kubebuilder:rbac:groups=cert-manager.io,resources=certificates;issuers;certificaterequests,verbs=*
 
 func (r *PortierisReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()
@@ -133,24 +134,27 @@ func (r *PortierisReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 		return recResult, recErr
 	}
 
-	//Secret
+	// Secret
 	if !instance.Spec.SkipSecretCreation {
-		recResult, recErr = r.createOrUpdateTlsSecret(instance)
-		if recErr != nil || recResult.Requeue {
-			return recResult, recErr
+		if instance.Spec.UseCertManager {
+			// Issuer
+			recResult, recErr = r.createOrUpdateIssuer(instance)
+			if recErr != nil || recResult.Requeue {
+				return recResult, recErr
+			}
+			// Certificate
+			recResult, recErr = r.createOrUpdateCertificate(instance)
+			if recErr != nil || recResult.Requeue {
+				return recResult, recErr
+			}
+		} else {
+			// Secret
+			recResult, recErr = r.createOrUpdateTlsSecret(instance)
+			if recErr != nil || recResult.Requeue {
+				return recResult, recErr
+			}
 		}
 	}
-
-	// if instance.Spec.UseCertManager {
-	// 	recResult, recErr = r.createOrUpdateCertificate(instance)
-	// 	if recErr != nil || recResult.Requeue {
-	// 		return recResult, recErr
-	// 	}
-	// 	recResult, recErr = r.createOrUpdateIssuer(instance)
-	// 	if recErr != nil || recResult.Requeue {
-	// 		return recResult, recErr
-	// 	}
-	// }
 
 	//Service Account
 	recResult, recErr = r.createOrUpdateServiceAccount(instance)
@@ -227,16 +231,12 @@ func (r *PortierisReconciler) SetupWithManager(mgr ctrl.Manager) error {
 
 func (r *PortierisReconciler) deleteClusterScopedChildrenResources(instance *apisv1alpha1.Portieris) error {
 	// delete any cluster scope resources owned by the instance
-	// (In Iubernetes 1.20 and later, a garbage collector ignore cluster scope children even if their owner is deleted)
+	// (In Kubernetes 1.20 and later, a garbage collector ignore cluster scope children even if their owner is deleted)
 	var err error
 	_, err = r.deleteWebhook(instance)
 	if err != nil {
 		return err
 	}
-	// _, err = r.deletePodSecurityPolicy(instance)
-	// if err != nil {
-	// 	return err
-	// }
 
 	// SCC
 	if instance.Spec.SecurityContextConstraints {

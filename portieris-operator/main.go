@@ -29,6 +29,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	policyv1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
+	cmapiv1alpha2 "github.com/jetstack/cert-manager/pkg/apis/certmanager/v1alpha2"
+	cmmeta "github.com/jetstack/cert-manager/pkg/apis/meta/v1"
 	scc "github.com/openshift/api/security/v1"
 	apisv1alpha1 "github.com/rurikudo/portieris/portieris-operator/api/v1alpha1"
 	"github.com/rurikudo/portieris/portieris-operator/controllers"
@@ -50,6 +52,8 @@ func init() {
 	utilruntime.Must(apiextensionsv1beta1.AddToScheme(scheme))
 	utilruntime.Must(policyv1.AddToScheme(scheme))
 	utilruntime.Must(scc.AddToScheme(scheme))
+	utilruntime.Must(cmapiv1alpha2.AddToScheme(scheme))
+	utilruntime.Must(cmmeta.AddToScheme(scheme))
 	// +kubebuilder:scaffold:scheme
 }
 
