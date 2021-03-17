@@ -14,7 +14,7 @@ metadata:
             "name": "portieris"
           },
           "spec": {
-            "IBMContainerService": true,
+            "IBMContainerService": false,
             "affinity": {
               "podAntiAffinity": {
                 "preferredDuringSchedulingIgnoredDuringExecution": [
@@ -83,7 +83,7 @@ metadata:
             "securityContext": {
               "runAsUser": 1000060001
             },
-            "securityContextConstraints": false,
+            "securityContextConstraints": true,
             "selector": {
               "app": "portieris"
             },
