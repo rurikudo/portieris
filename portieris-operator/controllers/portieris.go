@@ -34,6 +34,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
+	cmapiv1alpha2 "github.com/jetstack/cert-manager/pkg/apis/certmanager/v1alpha2"
 	cert "github.com/rurikudo/portieris/portieris-operator/cert"
 	admv1 "k8s.io/api/admissionregistration/v1beta1"
 	appsv1 "k8s.io/api/apps/v1"
@@ -696,107 +697,107 @@ func (r *PortierisReconciler) createOrUpdateCertSecret(instance *apiv1alpha1.Por
 
 }
 
-// func (r *PortierisReconciler) createOrUpdateCertificate(instance *apiv1alpha1.Portieris) (ctrl.Result, error) {
-// 	ctx := context.Background()
-// 	expected := res.BuildCertificateForPortieris(instance)
-// 	found := &certmanager.Certificate{}
+func (r *PortierisReconciler) createOrUpdateCertificate(instance *apiv1alpha1.Portieris) (ctrl.Result, error) {
+	ctx := context.Background()
+	expected := res.BuildCertificateForPortieris(instance)
+	found := &cmapiv1alpha2.Certificate{}
 
-// 	reqLogger := r.Log.WithValues(
-// 		"Instance.Name", instance.Name,
-// 		"Certificate.Name", expected.Name)
+	reqLogger := r.Log.WithValues(
+		"Instance.Name", instance.Name,
+		"Certificate.Name", expected.Name)
 
-// 	// Set CR instance as the owner and controller
-// 	err := controllerutil.SetControllerReference(instance, expected, r.Scheme)
-// 	if err != nil {
-// 		reqLogger.Error(err, "Failed to define expected resource")
-// 		return ctrl.Result{}, err
-// 	}
+	// Set CR instance as the owner and controller
+	err := controllerutil.SetControllerReference(instance, expected, r.Scheme)
+	if err != nil {
+		reqLogger.Error(err, "Failed to define expected resource")
+		return ctrl.Result{}, err
+	}
 
-// 	// If PodSecurityPolicy does not exist, create it and requeue
-// 	err = r.Get(ctx, types.NamespacedName{Name: expected.Name}, found)
+	// If PodSecurityPolicy does not exist, create it and requeue
+	err = r.Get(ctx, types.NamespacedName{Name: expected.Name, Namespace: instance.Namespace}, found)
 
-// 	if err != nil && errors.IsNotFound(err) {
-// 		reqLogger.Info("Creating a new resource")
-// 		err = r.Create(ctx, expected)
-// 		if err != nil && errors.IsAlreadyExists(err) {
-// 			// Already exists from previous reconcile, requeue.
-// 			reqLogger.Info("Skip reconcile: resource already exists")
-// 			return ctrl.Result{Requeue: true}, nil
-// 		} else if err != nil {
-// 			reqLogger.Error(err, "Failed to create new resource")
-// 			return ctrl.Result{}, err
-// 		}
-// 		// Created successfully - return and requeue
-// 		return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 1}, nil
-// 	} else if err != nil {
-// 		return ctrl.Result{}, err
-// 	} else {
-// 		if !reflect.DeepEqual(expected.Spec, found.Spec) {
-// 			expected.ObjectMeta = found.ObjectMeta
-// 			err = r.Update(ctx, expected)
-// 			if err != nil {
-// 				reqLogger.Error(err, "Failed to update the resource")
-// 				return ctrl.Result{}, err
-// 			}
-// 		}
-// 	}
-// 	// No extra validation
+	if err != nil && errors.IsNotFound(err) {
+		reqLogger.Info("Creating a new resource")
+		err = r.Create(ctx, expected)
+		if err != nil && errors.IsAlreadyExists(err) {
+			// Already exists from previous reconcile, requeue.
+			reqLogger.Info("Skip reconcile: resource already exists")
+			return ctrl.Result{Requeue: true}, nil
+		} else if err != nil {
+			reqLogger.Error(err, "Failed to create new resource")
+			return ctrl.Result{}, err
+		}
+		// Created successfully - return and requeue
+		return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 1}, nil
+	} else if err != nil {
+		return ctrl.Result{}, err
+	} else {
+		if !reflect.DeepEqual(expected.Spec, found.Spec) {
+			expected.ObjectMeta = found.ObjectMeta
+			err = r.Update(ctx, expected)
+			if err != nil {
+				reqLogger.Error(err, "Failed to update the resource")
+				return ctrl.Result{}, err
+			}
+		}
+	}
+	// No extra validation
 
-// 	// No reconcile was necessary
-// 	return ctrl.Result{}, nil
+	// No reconcile was necessary
+	return ctrl.Result{}, nil
 
-// }
+}
 
-// func (r *PortierisReconciler) createOrUpdateIssuer(instance *apiv1alpha1.Portieris) (ctrl.Result, error) {
-// 	ctx := context.Background()
-// 	expected := res.BuildIssuerForPortieris(instance)
-// 	found := &certmanager.Issuer{}
+func (r *PortierisReconciler) createOrUpdateIssuer(instance *apiv1alpha1.Portieris) (ctrl.Result, error) {
+	ctx := context.Background()
+	expected := res.BuildIssuerForPortieris(instance)
+	found := &cmapiv1alpha2.Issuer{}
 
-// 	reqLogger := r.Log.WithValues(
-// 		"Instance.Name", instance.Name,
-// 		"Issuer.Name", expected.Name)
+	reqLogger := r.Log.WithValues(
+		"Instance.Name", instance.Name,
+		"Issuer.Name", expected.Name)
 
-// 	// Set CR instance as the owner and controller
-// 	err := controllerutil.SetControllerReference(instance, expected, r.Scheme)
-// 	if err != nil {
-// 		reqLogger.Error(err, "Failed to define expected resource")
-// 		return ctrl.Result{}, err
-// 	}
+	// Set CR instance as the owner and controller
+	err := controllerutil.SetControllerReference(instance, expected, r.Scheme)
+	if err != nil {
+		reqLogger.Error(err, "Failed to define expected resource")
+		return ctrl.Result{}, err
+	}
 
-// 	// If PodSecurityPolicy does not exist, create it and requeue
-// 	err = r.Get(ctx, types.NamespacedName{Name: expected.Name}, found)
+	// If PodSecurityPolicy does not exist, create it and requeue
+	err = r.Get(ctx, types.NamespacedName{Name: expected.Name, Namespace: instance.Namespace}, found)
 
-// 	if err != nil && errors.IsNotFound(err) {
-// 		reqLogger.Info("Creating a new resource")
-// 		err = r.Create(ctx, expected)
-// 		if err != nil && errors.IsAlreadyExists(err) {
-// 			// Already exists from previous reconcile, requeue.
-// 			reqLogger.Info("Skip reconcile: resource already exists")
-// 			return ctrl.Result{Requeue: true}, nil
-// 		} else if err != nil {
-// 			reqLogger.Error(err, "Failed to create new resource")
-// 			return ctrl.Result{}, err
-// 		}
-// 		// Created successfully - return and requeue
-// 		return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 1}, nil
-// 	} else if err != nil {
-// 		return ctrl.Result{}, err
-// 	} else {
-// 		if !reflect.DeepEqual(expected.Spec, found.Spec) {
-// 			expected.ObjectMeta = found.ObjectMeta
-// 			err = r.Update(ctx, expected)
-// 			if err != nil {
-// 				reqLogger.Error(err, "Failed to update the resource")
-// 				return ctrl.Result{}, err
-// 			}
-// 		}
-// 	}
-// 	// No extra validation
+	if err != nil && errors.IsNotFound(err) {
+		reqLogger.Info("Creating a new resource")
+		err = r.Create(ctx, expected)
+		if err != nil && errors.IsAlreadyExists(err) {
+			// Already exists from previous reconcile, requeue.
+			reqLogger.Info("Skip reconcile: resource already exists")
+			return ctrl.Result{Requeue: true}, nil
+		} else if err != nil {
+			reqLogger.Error(err, "Failed to create new resource")
+			return ctrl.Result{}, err
+		}
+		// Created successfully - return and requeue
+		return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 1}, nil
+	} else if err != nil {
+		return ctrl.Result{}, err
+	} else {
+		if !reflect.DeepEqual(expected.Spec, found.Spec) {
+			expected.ObjectMeta = found.ObjectMeta
+			err = r.Update(ctx, expected)
+			if err != nil {
+				reqLogger.Error(err, "Failed to update the resource")
+				return ctrl.Result{}, err
+			}
+		}
+	}
+	// No extra validation
 
-// 	// No reconcile was necessary
-// 	return ctrl.Result{}, nil
+	// No reconcile was necessary
+	return ctrl.Result{}, nil
 
-// }
+}
 
 func addCertValues(instance *apiv1alpha1.Portieris, expected *corev1.Secret) *corev1.Secret {
 	reqLogger := log.WithValues(

@@ -6,11 +6,11 @@ metadata:
     - cleanup.finalizers.portieris.io
 spec:
   name: portieris
-  AllowAdmissionSkip: false
+  allowAdmissionSkip: false
   IBMContainerService: false
-  SkipSecretCreation: false
+  skipSecretCreation: false
   secretName: portieris-certs
-  UseCertManager: false
+  useCertManager: false
   selector:
     app: portieris
   affinity:
