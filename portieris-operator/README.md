@@ -7,7 +7,7 @@ Portieris is a Kubernetes admission controller for the enforcment of image secur
 ```
 cd portieris-operator
 ```
-if you want to create local cluster, you can create a new kind cluster with this command
+If you want to create local cluster, you can create a new kind cluster and local registry with this command
 ```
 ./dev-scripts/create-kind-cluster.sh
 ```
@@ -15,37 +15,28 @@ and you can delete cluster with the following command
 ```
 kind delete cluster --name=portieris-cluster
 ```
-1. build and push operator image
+1. Build and push operator image
 ```
-make docker-build IMG=localhost:5000/portieris-go-operator:0.1.5
-make docker-push IMG=localhost:5000/portieris-go-operator:0.1.5
+make docker-build IMG=localhost:5000/portieris-operator:0.1.5
+make docker-push IMG=localhost:5000/portieris-operator:0.1.5
 ```
-2. create namespace
+2. Create namespace for portieris operator
 ```
 oc create ns portieris-operator-system
 ```
 
-3. deploy operator
+3. Deploy portieris operator
 ```
-make deploy IMG=localhost:5000/portieris-go-operator:0.1.5
+make deploy IMG=localhost:5000/portieris-operator:0.1.5
 ```
-4. check pod status
+4. Check if operator pod is running
 ```
-$ oc get all -n portieris-operator-system
+$ oc get pod -n portieris-operator-system
 NAME                                                         READY     STATUS    RESTARTS   AGE
 pod/portieris-operator-controller-manager-7c6df5ffff-nwc2f   2/2       Running   0          2m6s
-
-NAME                                                            TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
-service/portieris-operator-controller-manager-metrics-service   ClusterIP   10.96.239.150   <none>        8443/TCP   2m6s
-
-NAME                                                    READY     UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/portieris-operator-controller-manager   1/1       1            1           2m6s
-
-NAME                                                               DESIRED   CURRENT   READY     AGE
-replicaset.apps/portieris-operator-controller-manager-7c6df5ffff   1         1         1         2m7s
 ```
 
-5. check operator log
+5. You can see operator log with `make log` command
 ```
 $ export PORTIERIS_NS=portieris-operator-system
 $ make log
@@ -60,9 +51,11 @@ I0128 05:39:25.029883       1 leaderelection.go:242] attempting to acquire leade
 ### Custom Resource: Portieris
 You can configure Portieris custom resource to define the configuration of Portieris.
 #### Configuration of Portieris
-`AllowAdmissionSkip`: Allow an annotation to be used to skip the webhook.  
-`IBMContainerService`: If not running on IBM Cloud Container Service set to false.  
-`securityContextConstraints`: If you deploy portieris in local cluster(minikub/kind etc.), please set to `false`.
++ `allowAdmissionSkip`: Allow an annotation to be used to skip the webhook  
++ `IBMContainerService`: If not running on IBM Cloud Container Service set to false   
++ `securityContextConstraints`: If you deploy portieris in local cluster(minikub/kind etc.), please set to `false`  
++ `useCertManager`: If using cert-manager to handle secrets, please set to true
++ `skipSecretCreation`: If managing portieris-certs secret externally, please set to true
 ```
 apiVersion: apis.portieris.io/v1alpha1
 kind: Portieris
@@ -72,26 +65,50 @@ spec:
   AllowAdmissionSkip: false
   IBMContainerService: false
   securityContextConstraints: false
+  useCertManager: false
+  skipSecretCreation: false
 ```
-#### Cluster Policy
+#### Allowed Repositories
+This permissive policy allows all images in namespaces which do not have an ImagePolicy.
 ```
-  clusterPolicy:
-  - name: '*'
+  allowedRepositories:
+  - '*'
 ```
+#### Finalizer
+In Kubernetes 1.20 and later, a garbage collector ignore cluster scope children even if their owner is deleted. Please enable a finalizer for portieris when you deploy portieris into Kubernetes 1.20 and later.
+```
+metadata:
+  name: portieris
+  finalizers:
+    - cleanup.finalizers.portieris.io
+```
+
 ### Deploy Custom Resource: Portieris
 
-create Portieris CR
+1. Create Portieris CR
 ```
 oc create -f config/samples/apis_v1alpha1_portieris.yaml -n portieris-operator-system
 ```
-
+2. Check if portieris server pod is running
+```
+$ oc get pod -n portieris-operator-system
+NAME                                                     READY     STATUS    RESTARTS   AGE
+portieris-6f7c856876-z4pc6                               1/1       Running   0          88s
+portieris-operator-controller-manager-7f85885977-mgtsh   2/2       Running   0          3m31s
+```
 ## Uninstalling Portieris
 
-delete Portieris CR
+Delete Portieris CR
 ```
 oc delete -f config/samples/apis_v1alpha1_portieris.yaml -n portieris-operator-system
 ```
+
+```
+kubectl patch portieris.apis.portieris.io/portieris -p '{"metadata":{"finalizers":[]}}' --type=merge -n portieris-operator-system
+```
+
 ## Uninstalling Portieris Operator
 ```
 make undeploy
 ```
+
