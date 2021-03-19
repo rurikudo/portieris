@@ -1,19 +1,26 @@
 # Portieris Operator
 Portieris is a Kubernetes admission controller for the enforcment of image security policies. Portieris can be deployed with operator. You can install portieris in a few simple steps.
 
+## Prerequisites
+You can access a cluster.
+If you want to use local cluster, you can create local kind cluster and local registry with this command.
+  ```
+  ./dev-scripts/create-kind-cluster.sh
+  ```
+  and you can delete cluster with the following command
+  ```
+  kind delete cluster --name=portieris-cluster
+  ```
 ## Installing Portieris Operator
 
-0. move to portieris-operatar dir
+0. Move to portieris-operatar dir
+  ```
+  cd portieris-operator
+  ```
+1. Set up parameters
 ```
-cd portieris-operator
-```
-If you want to create local cluster, you can create a new kind cluster and local registry with this command
-```
-./dev-scripts/create-kind-cluster.sh
-```
-and you can delete cluster with the following command
-```
-kind delete cluster --name=portieris-cluster
+$ export PORTIERIS_NS=portieris-operator-system
+$ export PORTIERIS_REPO_ROOT=<absolute path>/portieris
 ```
 1. Build and push operator image
 ```
@@ -38,7 +45,6 @@ pod/portieris-operator-controller-manager-7c6df5ffff-nwc2f   2/2       Running  
 
 5. You can see operator log with `make log` command
 ```
-$ export PORTIERIS_NS=portieris-operator-system
 $ make log
 bash ./dev-scripts/log_operator.sh
 2021-01-28T05:39:25.026Z	INFO	controller-runtime.metrics	metrics server is starting to listen	{"addr": "127.0.0.1:8080"}
@@ -51,11 +57,11 @@ I0128 05:39:25.029883       1 leaderelection.go:242] attempting to acquire leade
 ### Custom Resource: Portieris
 You can configure Portieris custom resource to define the configuration of Portieris.
 #### Configuration of Portieris
-+ `allowAdmissionSkip`: Allow an annotation to be used to skip the webhook  
-+ `IBMContainerService`: If not running on IBM Cloud Container Service set to false   
-+ `securityContextConstraints`: If you deploy portieris in local cluster(minikub/kind etc.), please set to `false`  
-+ `useCertManager`: If using cert-manager to handle secrets, please set to true
-+ `skipSecretCreation`: If managing portieris-certs secret externally, please set to true
++ allowAdmissionSkip: Allow an annotation to be used to skip the webhook  
++ IBMContainerService: If not running on IBM Cloud Container Service set to false   
++ securityContextConstraints: If you deploy portieris in local cluster(minikub/kind etc.), please set to `false`  
++ useCertManager: If using cert-manager to handle secrets, please set to true
++ skipSecretCreation: If managing portieris-certs secret externally, please set to true
 ```
 apiVersion: apis.portieris.io/v1alpha1
 kind: Portieris
@@ -102,7 +108,7 @@ Delete Portieris CR
 ```
 oc delete -f config/samples/apis_v1alpha1_portieris.yaml -n portieris-operator-system
 ```
-
+If CR is not removed when finalizer is available, please type the following command.
 ```
 kubectl patch portieris.apis.portieris.io/portieris -p '{"metadata":{"finalizers":[]}}' --type=merge -n portieris-operator-system
 ```
