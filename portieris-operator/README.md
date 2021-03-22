@@ -55,7 +55,8 @@ I0128 05:39:25.029883       1 leaderelection.go:242] attempting to acquire leade
 
 ## Installing Portieris
 ### Custom Resource: Portieris
-You can configure Portieris custom resource to define the configuration of Portieris.
+You can configure Portieris custom resource to define the configuration of Portieris. This CR has a similar structure to values.yaml in [Helm chart](https://github.com/IBM/portieris/blob/master/helm/portieris/values.yaml).
+
 #### Configuration of Portieris
 + allowAdmissionSkip: Allow an annotation to be used to skip the webhook  
 + IBMContainerService: If not running on IBM Cloud Container Service set to false   
