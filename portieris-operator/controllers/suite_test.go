@@ -30,7 +30,7 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	apisv1alpha1 "github.com/rurikudo/portieris/portieris-operator/api/v1alpha1"
+	apisv1alpha1 "github.com/IBM/portieris/portieris-operator/api/v1alpha1"
 	// +kubebuilder:scaffold:imports
 )
 

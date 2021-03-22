@@ -20,8 +20,8 @@ import (
 	"context"
 	"time"
 
+	apisv1alpha1 "github.com/IBM/portieris/portieris-operator/api/v1alpha1"
 	"github.com/go-logr/logr"
-	apisv1alpha1 "github.com/rurikudo/portieris/portieris-operator/api/v1alpha1"
 	admv1 "k8s.io/api/admissionregistration/v1beta1"
 	appsv1 "k8s.io/api/apps/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
@@ -225,9 +225,6 @@ func (r *PortierisReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Owns(&admv1.MutatingWebhookConfiguration{}).
 		Complete(r)
 }
-
-// Owns(&imgpolicyv1.ClusterImagePolicy{}).
-// Owns(&scc.SecurityContextConstraints{}).
 
 func (r *PortierisReconciler) deleteClusterScopedChildrenResources(instance *apisv1alpha1.Portieris) error {
 	// delete any cluster scope resources owned by the instance

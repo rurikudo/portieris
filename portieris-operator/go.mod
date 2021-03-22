@@ -1,10 +1,10 @@
-module github.com/rurikudo/portieris/portieris-operator
+module github.com/IBM/portieris/portieris-operator
 
 go 1.13
 
 require (
 	cloud.google.com/go v0.70.0 // indirect
-	github.com/IBM/portieris v0.10.0
+	github.com/IBM/portieris v0.10.1
 	github.com/go-logr/logr v0.2.1
 	github.com/go-logr/zapr v0.2.0 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
@@ -23,11 +23,10 @@ require (
 	sigs.k8s.io/controller-runtime v0.6.3
 )
 
-replace github.com/rurikudo/portieris/portieris-operator => ./
+replace github.com/IBM/portieris/portieris-operator => ./
 
 replace (
 	github.com/Azure/go-autorest => github.com/Azure/go-autorest v13.3.4-0.20200207053602-7439e774c9e9+incompatible
-	// github.com/go-logr/logr => github.com/go-logr/logr v0.1.0
 	k8s.io/api => k8s.io/api v0.18.6
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.18.6
 	k8s.io/apimachinery => k8s.io/apimachinery v0.18.6

@@ -43,5 +43,5 @@ spec:
   maturity: alpha
   provider:
     name: IBM
-    url: https://github.ibm.com/rurikudo/portieris
+    url: https://github.com/IBM/portieris
   version: 0.0.0
