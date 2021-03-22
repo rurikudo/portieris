@@ -83,7 +83,7 @@ metadata:
             "securityContext": {
               "runAsUser": 1000060001
             },
-            "securityContextConstraints": false,
+            "securityContextConstraints": true,
             "selector": {
               "app": "portieris"
             },
