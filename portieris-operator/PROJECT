@@ -1,7 +1,7 @@
 domain: portieris.io
 layout: go.kubebuilder.io/v2
 projectName: portieris-operator
-repo: github.com/rurikudo/portieris/portieris-operator
+repo: github.com/IBM/portieris/portieris-operator
 resources:
 - group: apis
   kind: Portieris

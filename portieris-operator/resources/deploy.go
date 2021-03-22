@@ -23,7 +23,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	intstr "k8s.io/apimachinery/pkg/util/intstr"
 
-	apiv1alpha1 "github.com/rurikudo/portieris/portieris-operator/api/v1alpha1"
+	apiv1alpha1 "github.com/IBM/portieris/portieris-operator/api/v1alpha1"
 	v1 "k8s.io/api/core/v1"
 )
 

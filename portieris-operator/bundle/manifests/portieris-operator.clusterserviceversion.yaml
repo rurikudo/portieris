@@ -106,7 +106,7 @@ metadata:
     capabilities: Basic Install
     operators.operatorframework.io/builder: operator-sdk-v1.2.0
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v2
-  name: portieris-operator.v0.10.13
+  name: portieris-operator.v0.10.14
   namespace: placeholder
 spec:
   apiservicedefinitions: {}
@@ -305,7 +305,7 @@ spec:
                       - --enable-leader-election
                     command:
                       - /manager
-                    image: quay.io/gajananan/portieris-operator:0.10.13
+                    image: quay.io/gajananan/portieris-operator:0.10.14
                     name: manager
                     resources:
                       limits:
@@ -363,5 +363,5 @@ spec:
   maturity: alpha
   provider:
     name: IBM
-    url: https://github.ibm.com/rurikudo/portieris
-  version: 0.10.13
+    url: https://github.com/IBM/portieris
+  version: 0.10.14
