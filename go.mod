@@ -1,6 +1,6 @@
 module github.com/IBM/portieris
 
-go 1.14
+go 1.16
 
 require (
 	github.com/IBM/go-sdk-core/v4 v4.9.0
@@ -18,27 +18,33 @@ require (
 	github.com/gofrs/uuid v3.2.0+incompatible // indirect
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
-	github.com/googleapis/gnostic v0.4.0 // indirect
+	github.com/google/go-containerregistry v0.4.1
+	github.com/googleapis/gnostic v0.5.4 // indirect
 	github.com/gorilla/mux v1.7.4
 	github.com/hailocab/go-hostpool v0.0.0-20160125115350-e80d13ce29ed // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/jinzhu/gorm v1.9.12 // indirect
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0 // indirect
 	github.com/kubernetes/apiextensions-apiserver v0.0.0-20181121072900-e8a638592964
-	github.com/miekg/pkcs11 v0.0.0-20181023194645-95e2e42e3ece // indirect
 	github.com/onsi/ginkgo v1.14.2
 	github.com/onsi/gomega v1.10.3
-	github.com/prometheus/client_golang v1.8.0
+	github.com/prometheus/client_golang v1.10.0
+	github.com/prometheus/common v0.18.0
 	github.com/satori/go.uuid v1.2.0
-	github.com/stretchr/testify v1.6.1
+	github.com/sigstore/cosign v0.2.0
+	github.com/sigstore/sigstore v0.0.0-20210405172749-e614ea31ba83
+	github.com/stretchr/testify v1.7.0
 	github.com/theupdateframework/notary v0.6.1
-	golang.org/x/crypto v0.0.0-20201012173705-84dcc777aaee
+	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad
+	google.golang.org/grpc/examples v0.0.0-20210408231144-1d1bbb55b381 // indirect
 	gopkg.in/dancannon/gorethink.v3 v3.0.5 // indirect
 	gopkg.in/fatih/pool.v2 v2.0.0 // indirect
 	gopkg.in/gorethink/gorethink.v3 v3.0.5 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776
+	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 	k8s.io/api v0.17.7
 	k8s.io/apiextensions-apiserver v0.17.2
 	k8s.io/apimachinery v0.17.7
 	k8s.io/client-go v0.17.7
+	github.com/googleapis/gnostic/OpenAPIv2 v0.4.0
+	github.com/IBM/go-sdk-core v0
 )

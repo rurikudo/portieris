@@ -22,6 +22,7 @@ import (
 	"github.com/IBM/portieris/helpers/image"
 	policyv1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
 	"github.com/IBM/portieris/pkg/kubernetes"
+	"github.com/IBM/portieris/pkg/verifier/cosign"
 	"github.com/IBM/portieris/pkg/verifier/simple"
 	notaryverifier "github.com/IBM/portieris/pkg/verifier/trust"
 	"github.com/IBM/portieris/pkg/verifier/vulnerability"
@@ -41,6 +42,8 @@ type enforcer struct {
 	nv notaryverifier.Interface
 	// simple signing verifier
 	sv simple.Verifier
+	// cosign signing verifier
+	cv cosign.Verifier
 	// scannerFactory creates new vulnerabilities scanners according to the policy
 	scannerFactory vulnerability.ScannerFactory
 }
@@ -64,6 +67,7 @@ func (e enforcer) DigestByPolicy(namespace string, img *image.Reference, credent
 
 	var digest *bytes.Buffer
 	var deny, err error
+	// simple signing
 	if len(policy.Simple.Requirements) > 0 {
 		glog.Infof("policy.Simple %v", policy.Simple)
 		simplePolicy, err := e.sv.TransformPolicies(e.kubeClientsetWrapper, namespace, policy.Simple.Requirements)
@@ -91,6 +95,7 @@ func (e enforcer) DigestByPolicy(namespace string, img *image.Reference, credent
 		}
 	}
 
+	// trust
 	if policy.Trust.Enabled != nil && *policy.Trust.Enabled {
 		glog.Infof("policy.Trust %v", policy.Trust)
 		var notaryDigest *bytes.Buffer
@@ -107,6 +112,18 @@ func (e enforcer) DigestByPolicy(namespace string, img *image.Reference, credent
 				return nil, fmt.Errorf("Notary signs conflicting digest: %v simple: %v", notaryDigest, digest), nil
 			}
 			digest = notaryDigest
+		}
+	}
+
+	// cosign
+	if len(policy.Cosign.Requirements) > 0 {
+		glog.Infof("policy.Cosign %v", policy.Cosign)
+		digest, deny, err = e.cv.VerifyByPolicy(e.kubeClientsetWrapper, img.String(), namespace, policy.Cosign.Requirements)
+		if err != nil {
+			return nil, nil, fmt.Errorf("cosign: %v", err)
+		}
+		if deny != nil {
+			return nil, fmt.Errorf("cosign: policy denied the request: %v", deny), nil
 		}
 	}
 
