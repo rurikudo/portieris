@@ -24,7 +24,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	fakeController "github.com/IBM/portieris/pkg/controller/fakecontroller"
+	fakeController "github.com/rurikudo/portieris/pkg/controller/fakecontroller"
 	admissionv1beta1 "k8s.io/api/admission/v1beta1"
 	"k8s.io/apimachinery/pkg/runtime"
 )

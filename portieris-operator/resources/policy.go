@@ -17,8 +17,8 @@
 package resources
 
 import (
-	policyv1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
-	apiv1alpha1 "github.com/IBM/portieris/portieris-operator/api/v1alpha1"
+	policyv1 "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
+	apiv1alpha1 "github.com/rurikudo/portieris/portieris-operator/api/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 

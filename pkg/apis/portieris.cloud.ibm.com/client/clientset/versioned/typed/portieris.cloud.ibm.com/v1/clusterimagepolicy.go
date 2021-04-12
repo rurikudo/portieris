@@ -19,10 +19,11 @@ limitations under the License.
 package v1
 
 import (
+	"context"
 	"time"
 
-	scheme "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/client/clientset/versioned/scheme"
-	v1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
+	scheme "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/client/clientset/versioned/scheme"
+	v1 "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -67,7 +68,7 @@ func (c *clusterImagePolicies) Get(name string, options metav1.GetOptions) (resu
 		Resource("clusterimagepolicies").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
-		Do().
+		Do(context.Background()).
 		Into(result)
 	return
 }
@@ -83,7 +84,7 @@ func (c *clusterImagePolicies) List(opts metav1.ListOptions) (result *v1.Cluster
 		Resource("clusterimagepolicies").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Do().
+		Do(context.Background()).
 		Into(result)
 	return
 }
@@ -99,7 +100,7 @@ func (c *clusterImagePolicies) Watch(opts metav1.ListOptions) (watch.Interface, 
 		Resource("clusterimagepolicies").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Watch()
+		Watch(context.Background())
 }
 
 // Create takes the representation of a clusterImagePolicy and creates it.  Returns the server's representation of the clusterImagePolicy, and an error, if there is any.
@@ -108,7 +109,7 @@ func (c *clusterImagePolicies) Create(clusterImagePolicy *v1.ClusterImagePolicy)
 	err = c.client.Post().
 		Resource("clusterimagepolicies").
 		Body(clusterImagePolicy).
-		Do().
+		Do(context.Background()).
 		Into(result)
 	return
 }
@@ -120,7 +121,7 @@ func (c *clusterImagePolicies) Update(clusterImagePolicy *v1.ClusterImagePolicy)
 		Resource("clusterimagepolicies").
 		Name(clusterImagePolicy.Name).
 		Body(clusterImagePolicy).
-		Do().
+		Do(context.Background()).
 		Into(result)
 	return
 }
@@ -131,7 +132,7 @@ func (c *clusterImagePolicies) Delete(name string, options *metav1.DeleteOptions
 		Resource("clusterimagepolicies").
 		Name(name).
 		Body(options).
-		Do().
+		Do(context.Background()).
 		Error()
 }
 
@@ -146,7 +147,7 @@ func (c *clusterImagePolicies) DeleteCollection(options *metav1.DeleteOptions, l
 		VersionedParams(&listOptions, scheme.ParameterCodec).
 		Timeout(timeout).
 		Body(options).
-		Do().
+		Do(context.Background()).
 		Error()
 }
 
@@ -158,7 +159,7 @@ func (c *clusterImagePolicies) Patch(name string, pt types.PatchType, data []byt
 		SubResource(subresources...).
 		Name(name).
 		Body(data).
-		Do().
+		Do(context.Background()).
 		Into(result)
 	return
 }

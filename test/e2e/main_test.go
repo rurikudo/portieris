@@ -22,7 +22,7 @@ import (
 	"testing"
 	"time"
 
-	testFramework "github.com/IBM/portieris/test/framework"
+	testFramework "github.com/rurikudo/portieris/test/framework"
 )
 
 var (

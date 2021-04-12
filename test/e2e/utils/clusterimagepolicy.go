@@ -19,8 +19,8 @@ import (
 
 	uuid "github.com/satori/go.uuid"
 
-	policyv1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
-	"github.com/IBM/portieris/test/framework"
+	policyv1 "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
+	"github.com/rurikudo/portieris/test/framework"
 	corev1 "k8s.io/api/core/v1"
 )
 

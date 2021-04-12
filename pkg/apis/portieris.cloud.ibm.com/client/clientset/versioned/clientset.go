@@ -21,7 +21,7 @@ package versioned
 import (
 	"fmt"
 
-	portierisv1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/client/clientset/versioned/typed/portieris.cloud.ibm.com/v1"
+	portierisv1 "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/client/clientset/versioned/typed/portieris.cloud.ibm.com/v1"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
 	flowcontrol "k8s.io/client-go/util/flowcontrol"

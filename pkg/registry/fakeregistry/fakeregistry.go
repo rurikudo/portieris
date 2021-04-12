@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/IBM/portieris/pkg/registry"
+	"github.com/rurikudo/portieris/pkg/registry"
 )
 
 var _ registry.Interface = &FakeRegistry{}

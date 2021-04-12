@@ -25,8 +25,8 @@ import (
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 
-	policyclientset "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/client/clientset/versioned"
-	customResourceDefinitionClientSet "github.com/kubernetes/apiextensions-apiserver/pkg/client/clientset/internalclientset/typed/apiextensions/internalversion"
+	policyclientset "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/client/clientset/versioned"
+	customResourceDefinitionClientSet "github.com/solo-io/solo-kit/pkg/api/v1/resources/common/kubernetes"
 
 	// Needed for testing using oidc (Armada)
 	_ "k8s.io/client-go/plugin/pkg/client/auth/oidc"
@@ -48,7 +48,7 @@ type Framework struct {
 	KubeClient                     kubernetes.Interface
 	ImagePolicyClient              policyclientset.Interface
 	ClusterImagePolicyClient       policyclientset.Interface
-	CustomResourceDefinitionClient customResourceDefinitionClientSet.CustomResourceDefinitionInterface
+	CustomResourceDefinitionClient customResourceDefinitionClientSet.CustomResourceDefinitionClient
 	HTTPClient                     *http.Client
 	Namespace                      string
 	HelmRelease                    string

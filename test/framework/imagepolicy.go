@@ -23,7 +23,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/apimachinery/pkg/util/yaml"
 
-	policyv1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
+	policyv1 "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
 )
 
 // LoadImagePolicyManifest takes a manifest and decodes it into a ImagePolicy object

@@ -26,8 +26,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/IBM/portieris/helpers/useragent"
 	"github.com/golang/glog"
+	"github.com/rurikudo/portieris/helpers/useragent"
 )
 
 // GetHTTPClient gets an http client to use for getting an oauth token

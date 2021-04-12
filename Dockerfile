@@ -1,9 +1,10 @@
-FROM golang:1.14.12 as golang
+FROM golang:1.16.2 as golang
 
 ARG VERSION=undefined
 WORKDIR /go/src/github.com/IBM/portieris
 RUN mkdir -p /go/src/github.com/IBM/portieris
 COPY . ./
+RUN go mod tidy
 RUN CGO_ENABLED=0 GOOS=linux go build \
     -ldflags="-X github.com/IBM/portieris/internal/info.Version=$VERSION" -a \
     -tags containers_image_openpgp -o ./bin/portieris ./cmd/portieris

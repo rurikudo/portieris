@@ -28,12 +28,12 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	policyv1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
-	apisv1alpha1 "github.com/IBM/portieris/portieris-operator/api/v1alpha1"
-	"github.com/IBM/portieris/portieris-operator/controllers"
 	cmapiv1alpha2 "github.com/jetstack/cert-manager/pkg/apis/certmanager/v1alpha2"
 	cmmeta "github.com/jetstack/cert-manager/pkg/apis/meta/v1"
 	scc "github.com/openshift/api/security/v1"
+	policyv1 "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
+	apisv1alpha1 "github.com/rurikudo/portieris/portieris-operator/api/v1alpha1"
+	"github.com/rurikudo/portieris/portieris-operator/controllers"
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	apiextensionsv1beta1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	// +kubebuilder:scaffold:imports

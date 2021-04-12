@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"time"
 
-	pk "github.com/IBM/portieris/pkg/kubernetes"
+	pk "github.com/rurikudo/portieris/pkg/kubernetes"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

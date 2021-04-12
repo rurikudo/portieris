@@ -19,7 +19,7 @@ limitations under the License.
 package fake
 
 import (
-	v1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/client/clientset/versioned/typed/portieris.cloud.ibm.com/v1"
+	v1 "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/client/clientset/versioned/typed/portieris.cloud.ibm.com/v1"
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
 )

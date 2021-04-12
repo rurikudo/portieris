@@ -23,9 +23,9 @@ import (
 	"fmt"
 	"strings"
 
-	policyv1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
-	"github.com/IBM/portieris/pkg/kubernetes"
 	"github.com/google/go-containerregistry/pkg/name"
+	policyv1 "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
+	"github.com/rurikudo/portieris/pkg/kubernetes"
 	"github.com/sigstore/cosign/pkg/cosign"
 	"github.com/sigstore/cosign/pkg/cosign/fulcio"
 	"github.com/sigstore/sigstore/pkg/signature/payload"

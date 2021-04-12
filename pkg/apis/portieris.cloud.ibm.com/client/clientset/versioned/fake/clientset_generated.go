@@ -19,9 +19,9 @@ limitations under the License.
 package fake
 
 import (
-	clientset "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/client/clientset/versioned"
-	portierisv1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/client/clientset/versioned/typed/portieris.cloud.ibm.com/v1"
-	fakeportierisv1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/client/clientset/versioned/typed/portieris.cloud.ibm.com/v1/fake"
+	clientset "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/client/clientset/versioned"
+	portierisv1 "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/client/clientset/versioned/typed/portieris.cloud.ibm.com/v1"
+	fakeportierisv1 "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/client/clientset/versioned/typed/portieris.cloud.ibm.com/v1/fake"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/discovery"

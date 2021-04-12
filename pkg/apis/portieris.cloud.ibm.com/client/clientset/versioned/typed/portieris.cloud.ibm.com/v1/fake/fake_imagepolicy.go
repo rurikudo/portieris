@@ -19,7 +19,7 @@ limitations under the License.
 package fake
 
 import (
-	portieriscloudibmcomv1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
+	portieriscloudibmcomv1 "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"

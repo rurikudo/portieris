@@ -19,10 +19,11 @@ limitations under the License.
 package v1
 
 import (
+	"context"
 	"time"
 
-	scheme "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/client/clientset/versioned/scheme"
-	v1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
+	scheme "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/client/clientset/versioned/scheme"
+	v1 "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -70,7 +71,7 @@ func (c *imagePolicies) Get(name string, options metav1.GetOptions) (result *v1.
 		Resource("imagepolicies").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
-		Do().
+		Do(context.Background()).
 		Into(result)
 	return
 }
@@ -87,7 +88,7 @@ func (c *imagePolicies) List(opts metav1.ListOptions) (result *v1.ImagePolicyLis
 		Resource("imagepolicies").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Do().
+		Do(context.Background()).
 		Into(result)
 	return
 }
@@ -104,7 +105,7 @@ func (c *imagePolicies) Watch(opts metav1.ListOptions) (watch.Interface, error) 
 		Resource("imagepolicies").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Watch()
+		Watch(context.Background())
 }
 
 // Create takes the representation of a imagePolicy and creates it.  Returns the server's representation of the imagePolicy, and an error, if there is any.
@@ -114,7 +115,7 @@ func (c *imagePolicies) Create(imagePolicy *v1.ImagePolicy) (result *v1.ImagePol
 		Namespace(c.ns).
 		Resource("imagepolicies").
 		Body(imagePolicy).
-		Do().
+		Do(context.Background()).
 		Into(result)
 	return
 }
@@ -127,7 +128,7 @@ func (c *imagePolicies) Update(imagePolicy *v1.ImagePolicy) (result *v1.ImagePol
 		Resource("imagepolicies").
 		Name(imagePolicy.Name).
 		Body(imagePolicy).
-		Do().
+		Do(context.Background()).
 		Into(result)
 	return
 }
@@ -139,7 +140,7 @@ func (c *imagePolicies) Delete(name string, options *metav1.DeleteOptions) error
 		Resource("imagepolicies").
 		Name(name).
 		Body(options).
-		Do().
+		Do(context.Background()).
 		Error()
 }
 
@@ -155,7 +156,7 @@ func (c *imagePolicies) DeleteCollection(options *metav1.DeleteOptions, listOpti
 		VersionedParams(&listOptions, scheme.ParameterCodec).
 		Timeout(timeout).
 		Body(options).
-		Do().
+		Do(context.Background()).
 		Error()
 }
 
@@ -168,7 +169,7 @@ func (c *imagePolicies) Patch(name string, pt types.PatchType, data []byte, subr
 		SubResource(subresources...).
 		Name(name).
 		Body(data).
-		Do().
+		Do(context.Background()).
 		Into(result)
 	return
 }

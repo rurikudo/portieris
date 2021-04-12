@@ -18,10 +18,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/IBM/portieris/internal/info"
-	portierisclientset "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/client/clientset/versioned"
-	"github.com/IBM/portieris/pkg/policy"
 	"github.com/golang/glog"
+	"github.com/rurikudo/portieris/internal/info"
+	portierisclientset "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/client/clientset/versioned"
+	"github.com/rurikudo/portieris/pkg/policy"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"

@@ -19,8 +19,8 @@ package simple
 import (
 	"testing"
 
-	"github.com/IBM/portieris/helpers/credential"
 	"github.com/containers/image/v5/signature"
+	"github.com/rurikudo/portieris/helpers/credential"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -19,9 +19,9 @@ package simple
 import (
 	"fmt"
 
-	policyv1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
-	"github.com/IBM/portieris/pkg/kubernetes"
 	"github.com/containers/image/v5/signature"
+	policyv1 "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
+	"github.com/rurikudo/portieris/pkg/kubernetes"
 )
 
 // TransformPolicies from Portieris to container/image lib policies

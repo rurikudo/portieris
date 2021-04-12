@@ -19,7 +19,7 @@ limitations under the License.
 package scheme
 
 import (
-	portierisv1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
+	portierisv1 "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"

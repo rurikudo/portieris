@@ -20,7 +20,7 @@ import (
 
 	uuid "github.com/satori/go.uuid"
 
-	"github.com/IBM/portieris/test/framework"
+	"github.com/rurikudo/portieris/test/framework"
 	corev1 "k8s.io/api/core/v1"
 )
 

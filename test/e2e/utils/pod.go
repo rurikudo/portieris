@@ -17,7 +17,7 @@ package utils
 import (
 	"testing"
 
-	"github.com/IBM/portieris/test/framework"
+	"github.com/rurikudo/portieris/test/framework"
 	"github.com/stretchr/testify/assert"
 	corev1 "k8s.io/api/core/v1"
 )

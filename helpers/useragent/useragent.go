@@ -17,7 +17,7 @@ package useragent
 import (
 	"net/http"
 
-	"github.com/IBM/portieris/internal/info"
+	"github.com/rurikudo/portieris/internal/info"
 )
 
 // Set is a http.RoundTripper which adds the User-Agent header to all requests.

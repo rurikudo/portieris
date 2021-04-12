@@ -18,7 +18,7 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/IBM/portieris/test/framework"
+	"github.com/rurikudo/portieris/test/framework"
 )
 
 func DumpEvents(t *testing.T, fw *framework.Framework, namespace string) {

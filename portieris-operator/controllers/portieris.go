@@ -22,10 +22,10 @@ import (
 	"reflect"
 	"time"
 
-	imgpolicyv1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
-	apiv1alpha1 "github.com/IBM/portieris/portieris-operator/api/v1alpha1"
-	res "github.com/IBM/portieris/portieris-operator/resources"
 	scc "github.com/openshift/api/security/v1"
+	imgpolicyv1 "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
+	apiv1alpha1 "github.com/rurikudo/portieris/portieris-operator/api/v1alpha1"
+	res "github.com/rurikudo/portieris/portieris-operator/resources"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 	extv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
@@ -34,8 +34,8 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
-	cert "github.com/IBM/portieris/portieris-operator/cert"
 	cmapiv1alpha2 "github.com/jetstack/cert-manager/pkg/apis/certmanager/v1alpha2"
+	cert "github.com/rurikudo/portieris/portieris-operator/cert"
 	admv1 "k8s.io/api/admissionregistration/v1beta1"
 	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"

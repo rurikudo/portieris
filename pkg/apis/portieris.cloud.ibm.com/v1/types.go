@@ -17,7 +17,7 @@ package v1
 import (
 	"strings"
 
-	"github.com/IBM/portieris/helpers/wildcard"
+	"github.com/rurikudo/portieris/helpers/wildcard"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

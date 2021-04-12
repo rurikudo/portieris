@@ -17,8 +17,8 @@ package cosign
 import (
 	"bytes"
 
-	policyv1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
-	"github.com/IBM/portieris/pkg/kubernetes"
+	policyv1 "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
+	"github.com/rurikudo/portieris/pkg/kubernetes"
 )
 
 // Verifier is for verifying simple signing

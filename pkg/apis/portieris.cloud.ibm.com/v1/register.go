@@ -15,7 +15,7 @@
 package v1
 
 import (
-	policy "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com"
+	policy "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"

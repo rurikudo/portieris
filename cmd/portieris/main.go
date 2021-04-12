@@ -22,18 +22,18 @@ import (
 	"os"
 	"strings"
 
-	kube "github.com/IBM/portieris/helpers/kube"
-	"github.com/IBM/portieris/internal/info"
-	"github.com/IBM/portieris/pkg/controller/multi"
-	"github.com/IBM/portieris/pkg/kubernetes"
-	"github.com/IBM/portieris/pkg/metrics"
-	notaryclient "github.com/IBM/portieris/pkg/notary"
-	registryclient "github.com/IBM/portieris/pkg/registry"
-	notaryverifier "github.com/IBM/portieris/pkg/verifier/trust"
-	"github.com/IBM/portieris/pkg/webhook"
 	"github.com/golang/glog"
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	kube "github.com/rurikudo/portieris/helpers/kube"
+	"github.com/rurikudo/portieris/internal/info"
+	"github.com/rurikudo/portieris/pkg/controller/multi"
+	"github.com/rurikudo/portieris/pkg/kubernetes"
+	"github.com/rurikudo/portieris/pkg/metrics"
+	notaryclient "github.com/rurikudo/portieris/pkg/notary"
+	registryclient "github.com/rurikudo/portieris/pkg/registry"
+	notaryverifier "github.com/rurikudo/portieris/pkg/verifier/trust"
+	"github.com/rurikudo/portieris/pkg/webhook"
 )
 
 func main() {

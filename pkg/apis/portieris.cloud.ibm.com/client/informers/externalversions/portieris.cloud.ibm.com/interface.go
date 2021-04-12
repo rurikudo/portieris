@@ -19,8 +19,8 @@ limitations under the License.
 package portieris
 
 import (
-	internalinterfaces "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/client/informers/externalversions/internalinterfaces"
-	v1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/client/informers/externalversions/portieris.cloud.ibm.com/v1"
+	internalinterfaces "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/client/informers/externalversions/internalinterfaces"
+	v1 "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/client/informers/externalversions/portieris.cloud.ibm.com/v1"
 )
 
 // Interface provides access to each of this group's versions.

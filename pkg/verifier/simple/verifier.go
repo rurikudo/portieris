@@ -17,10 +17,10 @@ package simple
 import (
 	"bytes"
 
-	"github.com/IBM/portieris/helpers/credential"
-	policyv1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
-	"github.com/IBM/portieris/pkg/kubernetes"
 	"github.com/containers/image/v5/signature"
+	"github.com/rurikudo/portieris/helpers/credential"
+	policyv1 "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
+	"github.com/rurikudo/portieris/pkg/kubernetes"
 )
 
 // Verifier is for verifying simple signing

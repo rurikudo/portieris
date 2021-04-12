@@ -17,7 +17,7 @@ package e2e
 import (
 	"testing"
 
-	"github.com/IBM/portieris/test/e2e/utils"
+	"github.com/rurikudo/portieris/test/e2e/utils"
 )
 
 func TestNotary_ImagePolicyRepositories_AllowAllDenyAll(t *testing.T) {

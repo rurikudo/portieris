@@ -22,14 +22,14 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/IBM/portieris/helpers/credential"
-	"github.com/IBM/portieris/internal/info"
 	"github.com/containers/image/v5/docker"
 	"github.com/containers/image/v5/image"
 	"github.com/containers/image/v5/manifest"
 	"github.com/containers/image/v5/signature"
 	"github.com/containers/image/v5/types"
 	"github.com/golang/glog"
+	"github.com/rurikudo/portieris/helpers/credential"
+	"github.com/rurikudo/portieris/internal/info"
 )
 
 // VerifyByPolicy verifies the image according to the supplied policy and returns the verified digest, verify error or processing error

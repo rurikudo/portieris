@@ -15,7 +15,7 @@
 package registry
 
 import (
-	"github.com/IBM/portieris/helpers/oauth"
+	"github.com/rurikudo/portieris/helpers/oauth"
 )
 
 // Client .

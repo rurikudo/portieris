@@ -17,9 +17,9 @@
 package resources
 
 import (
-	apiv1alpha1 "github.com/IBM/portieris/portieris-operator/api/v1alpha1"
 	cmapiv1alpha2 "github.com/jetstack/cert-manager/pkg/apis/certmanager/v1alpha2"
 	cmmeta "github.com/jetstack/cert-manager/pkg/apis/meta/v1"
+	apiv1alpha1 "github.com/rurikudo/portieris/portieris-operator/api/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

@@ -23,8 +23,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/IBM/portieris/internal/info"
 	"github.com/docker/distribution/registry/client/transport"
+	"github.com/rurikudo/portieris/internal/info"
 	notaryclient "github.com/theupdateframework/notary/client"
 	"github.com/theupdateframework/notary/trustpinning"
 	"github.com/theupdateframework/notary/tuf/data"

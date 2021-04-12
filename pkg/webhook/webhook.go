@@ -25,7 +25,7 @@ import (
 
 	"github.com/golang/glog"
 
-	"github.com/IBM/portieris/pkg/controller"
+	"github.com/rurikudo/portieris/pkg/controller"
 	admissionv1beta1 "k8s.io/api/admission/v1beta1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer"

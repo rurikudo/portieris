@@ -19,6 +19,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"path"
+	"context"
 
 	"github.com/golang/glog"
 	"github.com/theupdateframework/notary/tuf/data"
@@ -124,7 +125,7 @@ func (v *Verifier) getDigest(server, image, notaryToken, targetName string, sign
 func (v *Verifier) getSignerSecret(namespace, signerSecretName string) (Signer, error) {
 
 	// Retrieve secret
-	secret, err := v.kubeClientsetWrapper.CoreV1().Secrets(namespace).Get(signerSecretName, metav1.GetOptions{})
+	secret, err := v.kubeClientsetWrapper.CoreV1().Secrets(namespace).Get(context.Background(), signerSecretName, metav1.GetOptions{})
 	if err != nil {
 		glog.Error("Error: ", err)
 		return Signer{}, err

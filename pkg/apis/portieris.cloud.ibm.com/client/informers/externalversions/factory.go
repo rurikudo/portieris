@@ -23,9 +23,9 @@ import (
 	sync "sync"
 	time "time"
 
-	versioned "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/client/clientset/versioned"
-	internalinterfaces "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/client/informers/externalversions/internalinterfaces"
-	portieriscloudibmcom "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/client/informers/externalversions/portieris.cloud.ibm.com"
+	versioned "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/client/clientset/versioned"
+	internalinterfaces "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/client/informers/externalversions/internalinterfaces"
+	portieriscloudibmcom "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/client/informers/externalversions/portieris.cloud.ibm.com"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"

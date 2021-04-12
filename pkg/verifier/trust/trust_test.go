@@ -17,10 +17,10 @@ package trust
 import (
 	"fmt"
 
-	"github.com/IBM/portieris/pkg/kubernetes"
-	"github.com/IBM/portieris/pkg/notary/fakenotary"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/rurikudo/portieris/pkg/kubernetes"
+	"github.com/rurikudo/portieris/pkg/notary/fakenotary"
 	notaryclient "github.com/theupdateframework/notary/client"
 	"github.com/theupdateframework/notary/tuf/data"
 	corev1 "k8s.io/api/core/v1"

@@ -18,15 +18,15 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/IBM/portieris/helpers/credential"
-	"github.com/IBM/portieris/helpers/image"
-	policyv1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
-	"github.com/IBM/portieris/pkg/kubernetes"
-	"github.com/IBM/portieris/pkg/verifier/cosign"
-	"github.com/IBM/portieris/pkg/verifier/simple"
-	notaryverifier "github.com/IBM/portieris/pkg/verifier/trust"
-	"github.com/IBM/portieris/pkg/verifier/vulnerability"
 	"github.com/golang/glog"
+	"github.com/rurikudo/portieris/helpers/credential"
+	"github.com/rurikudo/portieris/helpers/image"
+	policyv1 "github.com/rurikudo/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
+	"github.com/rurikudo/portieris/pkg/kubernetes"
+	"github.com/rurikudo/portieris/pkg/verifier/cosign"
+	"github.com/rurikudo/portieris/pkg/verifier/simple"
+	notaryverifier "github.com/rurikudo/portieris/pkg/verifier/trust"
+	"github.com/rurikudo/portieris/pkg/verifier/vulnerability"
 )
 
 // Enforcer is an interface that enforces pod admission based on a configured policy
