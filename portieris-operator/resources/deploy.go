@@ -81,8 +81,48 @@ func BuildDeploymentForPortieris(cr *apiv1alpha1.Portieris) *appsv1.Deployment {
 		Resources:    cr.Spec.Resources,
 	}
 
+	cosignVerifier := v1.Container{
+		Name:            "cosign-verifier",
+		Image:           cr.Spec.CosignVerifierImage,
+		ImagePullPolicy: cr.Spec.Image.PullPolicy,
+		ReadinessProbe: &v1.Probe{
+			InitialDelaySeconds: 10,
+			PeriodSeconds:       10,
+			Handler: v1.Handler{
+				HTTPGet: &v1.HTTPGetAction{
+					Path:   "/health/readiness",
+					Port:   intstr.IntOrString{IntVal: 8000},
+					Scheme: v1.URISchemeHTTPS,
+				},
+			},
+		},
+		LivenessProbe: &v1.Probe{
+			InitialDelaySeconds: 10,
+			PeriodSeconds:       10,
+			Handler: v1.Handler{
+				HTTPGet: &v1.HTTPGetAction{
+					Path:   "/health/liveness",
+					Port:   intstr.IntOrString{IntVal: 8000},
+					Scheme: v1.URISchemeHTTPS,
+				},
+			},
+		},
+		Ports: []v1.ContainerPort{
+			{
+				Name:          "http",
+				ContainerPort: 8081,
+				Protocol:      v1.ProtocolTCP,
+			},
+		},
+		VolumeMounts: servervolumemounts,
+		Resources:    cr.Spec.Resources,
+	}
+
 	containers := []v1.Container{
 		serverContainer,
+	}
+	if cr.Spec.EnableCosignVerify {
+		containers = append(containers, cosignVerifier)
 	}
 
 	volumes := []v1.Volume{

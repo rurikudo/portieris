@@ -2,10 +2,12 @@ apiVersion: apis.portieris.io/v1alpha1
 kind: Portieris
 metadata:
   name: portieris
-  finalizers:
-    - cleanup.finalizers.portieris.io
+  # finalizers:
+  #   - cleanup.finalizers.portieris.io
 spec:
   name: portieris
+  enableCosignVerify: true
+  cosignVerifierImage: localhost:5000/cosign-verifier:0.0.21
   allowAdmissionSkip: false
   IBMContainerService: false
   skipSecretCreation: false
@@ -37,11 +39,11 @@ spec:
   allowedRepositories:
   - '*'
   image:
-    host: icr.io/portieris
+    host: localhost:5000
     image: portieris
     pullPolicy: Always
     pullSecret: []
-    tag: v0.10.1
+    tag: cv2
   nodeSelector: {}
   replicaCount: 1
   resources:
@@ -62,6 +64,6 @@ spec:
   tolerations: []
   webHooks:
     failurePolicy: Fail
-  securityContextConstraints: true
+  securityContextConstraints: false
   
   

@@ -57,6 +57,7 @@ func NewEnforcer(kubeClientsetWrapper kubernetes.WrapperInterface, nv *notaryver
 }
 
 func (e enforcer) DigestByPolicy(namespace string, img *image.Reference, credentials credential.Credentials, policy *policyv1.Policy) (*bytes.Buffer, error, error) {
+	glog.Infof("policy %v", policy)
 	// no policy indicates admission should be allowed, without mutation
 	if policy == nil {
 		return nil, nil, nil
@@ -107,6 +108,18 @@ func (e enforcer) DigestByPolicy(namespace string, img *image.Reference, credent
 				return nil, fmt.Errorf("Notary signs conflicting digest: %v simple: %v", notaryDigest, digest), nil
 			}
 			digest = notaryDigest
+		}
+	}
+
+	// cosign
+	if policy.Cosign.Requirement.KeySecret != "" {
+		glog.Infof("policy.Cosign %v", policy.Cosign)
+		digest, deny, err = cosignVerify(img.String(), namespace, policy.Cosign.Requirement)
+		if err != nil {
+			return nil, nil, fmt.Errorf("cosign: %v", err)
+		}
+		if deny != nil {
+			return nil, fmt.Errorf("cosign: policy denied the request: %v", deny), nil
 		}
 	}
 

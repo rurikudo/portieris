@@ -4,5 +4,5 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
 - name: controller
-  newName: quay.io/gajananan/portieris-operator
-  newTag: 0.10.13dev
+  newName: localhost:5000/portieris-operator
+  newTag: test4
