@@ -1,9 +1,8 @@
-module github.com/IBM/portieris/cosign
+module github.com/IBM/portieris/cosign-verify
 
 go 1.16
 
 require (
-	github.com/docker/cli v0.0.0-20191017083524-a8ff7f821017 // indirect
 	github.com/docker/docker v1.4.2-0.20191219165747-a9416c67da9f // indirect
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/google/go-containerregistry v0.4.1
@@ -20,8 +19,9 @@ require (
 
 replace (
 	github.com/Azure/go-autorest => github.com/Azure/go-autorest v13.3.4-0.20200207053602-7439e774c9e9+incompatible
-	github.com/IBM/portieris/cosign => ./
+	github.com/IBM/portieris/cosign-verify => ./
 	github.com/googleapis/gnostic/OpenAPIv2 => github.com/googleapis/gnostic/openapiv2 v0.5.4
+	github.com/sigstore/cosign => ./cosign
 	google.golang.org/grpc => google.golang.org/grpc v1.29.1
 	k8s.io/api => k8s.io/api v0.19.0
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.19.0

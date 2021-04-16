@@ -20,9 +20,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"io/ioutil"
 	"net/http"
+	"strings"
 
 	policyv1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
+	"github.com/golang/glog"
 )
 
 const cosignVerifierUrl = "http://localhost:8081"
@@ -32,34 +36,51 @@ type cosignVerifyInput struct {
 	Namespace          string `json:"namespace"`
 	Key                string `json:"key"`
 	KeySecretNamespace string `json:"keyNamespace"`
+	TransparencyLog    bool   `json:"transparencyLog"`
 }
 
 type cosignVerifyResult struct {
-	Deny   error        `json:"deny"`
-	Err    error        `json:"err"`
-	Digest bytes.Buffer `json:"digest"`
+	Deny       error  `json:"deny"`
+	Err        error  `json:"err"`
+	Digest     string `json:"digest"`
+	CommonName string `json:"commonName"`
 }
 
-func cosignVerify(img string, namespace string, policy policyv1.CosignRequirement) (*bytes.Buffer, error, error) {
+func cosignVerify(img string, namespace string, policy policyv1.CosignRequirement, transparencyLog bool) (string, *bytes.Buffer, error, error) {
 	cvInput := cosignVerifyInput{
 		Image:              img,
 		Namespace:          namespace,
 		Key:                policy.KeySecret,
 		KeySecretNamespace: policy.KeySecretNamespace,
+		TransparencyLog:    transparencyLog,
 	}
 	cosignVerifyInputJson, _ := json.Marshal(cvInput)
 
 	cvUrl := cosignVerifierUrl
+	glog.Infof("http.Cosign %v", cosignVerifierUrl)
 	cvResponse, err := http.Post(cvUrl, "application/json", bytes.NewBuffer([]byte(cosignVerifyInputJson)))
 	if err != nil {
-		return nil, nil, err
+		return "", nil, nil, err
 	}
 	if cvResponse.StatusCode != 200 {
 		errMsg := "Error reported from CosignVerifier"
-		return nil, nil, errors.New(errMsg)
+		return "", nil, nil, errors.New(errMsg)
 	}
-	var cvres cosignVerifyResult
-	json.NewDecoder(cvResponse.Body).Decode(&cvres)
 
-	return &cvres.Digest, cvres.Deny, cvres.Err
+	var cvres cosignVerifyResult
+	body, err := ioutil.ReadAll(cvResponse.Body)
+	if err != nil {
+		fmt.Println("Request error:", err)
+		return "", nil, nil, err
+	}
+	str_json := string(body)
+	err = json.Unmarshal([]byte(str_json), &cvres)
+	if err != nil {
+		fmt.Println(err)
+		return "", nil, nil, err
+	}
+
+	// glog.Infof("cosignVerifyResult: %v", cvres)
+	dres := bytes.NewBufferString(strings.TrimPrefix(cvres.Digest, "sha256:"))
+	return cvres.CommonName, dres, cvres.Deny, cvres.Err
 }

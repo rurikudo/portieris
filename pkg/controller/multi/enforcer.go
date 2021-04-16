@@ -112,17 +112,18 @@ func (e enforcer) DigestByPolicy(namespace string, img *image.Reference, credent
 	}
 
 	// cosign
-	if policy.Cosign.Requirement.KeySecret != "" {
+	if policy.Cosign.Enabled != nil && *policy.Cosign.Enabled {
 		glog.Infof("policy.Cosign %v", policy.Cosign)
-		digest, deny, err = cosignVerify(img.String(), namespace, policy.Cosign.Requirement)
+		signer, digest, deny, err := cosignVerify(img.String(), namespace, policy.Cosign.Requirement, *policy.Cosign.TransparencyLog)
 		if err != nil {
 			return nil, nil, fmt.Errorf("cosign: %v", err)
 		}
 		if deny != nil {
 			return nil, fmt.Errorf("cosign: policy denied the request: %v", deny), nil
 		}
+		glog.Infof("CommonName: %v", signer)
+		glog.Infof("digest: %v", digest)
 	}
-
 	return digest, nil, nil
 }
 

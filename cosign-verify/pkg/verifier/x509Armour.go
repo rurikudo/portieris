@@ -17,6 +17,7 @@
 package verifier
 
 import (
+	"crypto"
 	"crypto/ecdsa"
 	"crypto/x509"
 	"encoding/pem"
@@ -31,7 +32,7 @@ type PublicKey interface {
 	signature.PublicKeyProvider
 }
 
-func decodeArmoredKey(keyBytes []byte) (*ecdsa.PublicKey, error) { // (PublicKey, error)
+func decodeArmoredKey(keyBytes []byte) (PublicKey, error) { // (PublicKey, error) (*ecdsa.PublicKey, error)
 	if len(keyBytes) == 0 {
 		return nil, fmt.Errorf("Key: empty")
 	}
@@ -42,8 +43,8 @@ func decodeArmoredKey(keyBytes []byte) (*ecdsa.PublicKey, error) { // (PublicKey
 		if err != nil {
 			log.Error(err, "parsing key", "key", p)
 		}
-		return key.(*ecdsa.PublicKey), nil
-		// return signature.ECDSAVerifier{Key: key.(*ecdsa.PublicKey), HashAlg: crypto.SHA256}, nil
+		// return key.(*ecdsa.PublicKey), nil
+		return signature.ECDSAVerifier{Key: key.(*ecdsa.PublicKey), HashAlg: crypto.SHA256}, nil
 	}
 	return nil, fmt.Errorf("Key: empty")
 }

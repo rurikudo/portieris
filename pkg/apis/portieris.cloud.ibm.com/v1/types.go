@@ -100,7 +100,9 @@ type Policy struct {
 
 // Cosign
 type Cosign struct {
-	Requirement CosignRequirement `json:"requirement"`
+	Enabled         *bool             `json:"enabled,omitempty"`
+	TransparencyLog *bool             `json:"transparencyLog,omitempty"`
+	Requirement     CosignRequirement `json:"requirement"`
 }
 
 // CosignRequirement .

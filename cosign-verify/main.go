@@ -16,40 +16,24 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"log"
 	"net/http"
 
-	"github.com/IBM/portieris/cosign/pkg/verifier"
+	"github.com/IBM/portieris/cosign-verify/pkg/verifier"
 	"github.com/golang/glog"
 )
 
-type ImageToVerify struct {
-	Image        string                `json:"image"`
-	Namespace    string                `json:"namespace"`
-	Key          string                `json:"key"`
-	KeyNamespace string                `json:"keyNamespace"`
-	Credential   []verifier.Credential `json:"credential"`
-}
-
-type VerifyResult struct {
-	Deny   error        `json:"deny"`
-	Err    error        `json:"err"`
-	Digest bytes.Buffer `json:"digest"`
-}
+// var kubeconfig *string = flag.String("kubeconfig", "", "location of kubeconfig file to use for an out-of-cluster kube client configuration")
 
 func CosignVerify(w http.ResponseWriter, r *http.Request) {
 	glog.Infof("cosign-verifier is called....")
-	var imageToVerify ImageToVerify
+	var imageToVerify verifier.ImageToVerify
 	json.NewDecoder(r.Body).Decode(&imageToVerify)
-	digest, deny, err := verifier.Verifier(imageToVerify.Image, imageToVerify.Namespace, imageToVerify.Key, imageToVerify.KeyNamespace)
-	vres := VerifyResult{
-		Deny:   deny,
-		Err:    err,
-		Digest: *digest,
-	}
-	res, err := json.Marshal(vres)
+	// vres := verifier.Verifier(imageToVerify, kubeconfig)
+	vres := verifier.Verifier(imageToVerify)
+	res, _ := json.Marshal(vres)
+	// glog.Infof("cosign-verifier res.... %v", res)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(res)
 }
@@ -60,5 +44,6 @@ func handleRequests() {
 }
 
 func main() {
+	// flag.Parse() // glog flags
 	handleRequests()
 }

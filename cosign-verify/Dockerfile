@@ -3,14 +3,14 @@ FROM golang:1.16.3 as golang
 
 WORKDIR /workspace
 
+COPY . ./
+
 COPY go.mod go.mod
 COPY go.sum go.sum
 
 
 RUN go mod tidy
 RUN go mod download
-
-COPY . ./
 
 ARG CGO_ENABLED=0
 ARG GOOS=linux
@@ -20,12 +20,16 @@ RUN go build \
     -ldflags '-s -w'
 
 
-FROM busybox
-
+# FROM busybox
+FROM ubuntu
 ENV DOCKER_CONFIG /tmp
+# ENV COSIGN_EXPERIMENTAL "1"
 COPY --from=golang /go/bin/main /app/main
-
+RUN apt-get update
+# RUN apt-get install -y curl jq openssl
+RUN apt-get install -y openssl curl
 ENTRYPOINT ["/app/main"]
+
 
 
 
