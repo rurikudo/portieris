@@ -31,11 +31,19 @@ func Verifier(imageToVerify ImageToVerify) *VerifyResult {
 	kubeWrapper := kube.NewKubeClientsetWrapper(kubeClientset)
 	commonName, digest, deny, err := VerifyByPolicy(kubeWrapper, imageToVerify)
 	glog.Infof("digest... %v", digest)
+	var err_s string
+	var deny_s string
+	if err != nil {
+		err_s = err.Error()
+	}
+	if deny != nil {
+		deny_s = deny.Error()
+	}
 	vres := &VerifyResult{
-		Deny:       deny,
+		Deny:       deny_s,
 		Digest:     digest,
 		CommonName: commonName,
-		Err:        err,
+		Err:        err_s,
 	}
 	e, err := json.Marshal(vres)
 	glog.Infof("VerifyResult... %v", string(e))
@@ -48,12 +56,13 @@ type ImageToVerify struct {
 	Namespace       string `json:"namespace"`
 	Key             string `json:"key"`
 	KeyNamespace    string `json:"keyNamespace"`
+	CommonName      string `json:"commonName"`
 	TransparencyLog bool   `json:"transparencyLog"`
 }
 
 type VerifyResult struct {
-	Deny       error  `json:"deny"`
-	Err        error  `json:"err"`
+	Deny       string `json:"deny"`
+	Err        string `json:"err"`
 	Digest     string `json:"digest"`
 	CommonName string `json:"commonName"`
 }

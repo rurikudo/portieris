@@ -121,7 +121,7 @@ func (e enforcer) DigestByPolicy(namespace string, img *image.Reference, credent
 		if deny != nil {
 			return nil, fmt.Errorf("cosign: policy denied the request: %v", deny), nil
 		}
-		glog.Infof("CommonName: %v", signer)
+		glog.Infof("image: %v is signed by %v", img.String(), signer)
 		glog.Infof("digest: %v", digest)
 	}
 	return digest, nil, nil

@@ -107,6 +107,7 @@ type Cosign struct {
 
 // CosignRequirement .
 type CosignRequirement struct {
+	CommonName         string `json:"commonName,omitEmpty"`
 	KeySecret          string `json:"keySecret,omitEmpty"`
 	KeySecretNamespace string `json:"keySecretNamespace,omitEmpty"`
 }

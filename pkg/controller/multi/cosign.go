@@ -36,12 +36,13 @@ type cosignVerifyInput struct {
 	Namespace          string `json:"namespace"`
 	Key                string `json:"key"`
 	KeySecretNamespace string `json:"keyNamespace"`
+	CommonName         string `json:"commonName"`
 	TransparencyLog    bool   `json:"transparencyLog"`
 }
 
 type cosignVerifyResult struct {
-	Deny       error  `json:"deny"`
-	Err        error  `json:"err"`
+	Deny       string `json:"deny"`
+	Err        string `json:"err"`
 	Digest     string `json:"digest"`
 	CommonName string `json:"commonName"`
 }
@@ -52,6 +53,7 @@ func cosignVerify(img string, namespace string, policy policyv1.CosignRequiremen
 		Namespace:          namespace,
 		Key:                policy.KeySecret,
 		KeySecretNamespace: policy.KeySecretNamespace,
+		CommonName:         policy.CommonName,
 		TransparencyLog:    transparencyLog,
 	}
 	cosignVerifyInputJson, _ := json.Marshal(cvInput)
@@ -81,6 +83,14 @@ func cosignVerify(img string, namespace string, policy policyv1.CosignRequiremen
 	}
 
 	// glog.Infof("cosignVerifyResult: %v", cvres)
-	dres := bytes.NewBufferString(strings.TrimPrefix(cvres.Digest, "sha256:"))
-	return cvres.CommonName, dres, cvres.Deny, cvres.Err
+	digest_res := bytes.NewBufferString(strings.TrimPrefix(cvres.Digest, "sha256:"))
+	var deny_res error
+	var err_res error
+	if cvres.Deny != "" {
+		deny_res = fmt.Errorf(cvres.Deny)
+	}
+	if cvres.Err != "" {
+		err_res = fmt.Errorf(cvres.Err)
+	}
+	return cvres.CommonName, digest_res, deny_res, err_res
 }
