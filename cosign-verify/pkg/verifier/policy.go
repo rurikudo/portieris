@@ -36,7 +36,7 @@ func VerifyByPolicy(kWrapper kube.WrapperInterface, imageToVerify ImageToVerify)
 	namespace := imageToVerify.Namespace
 	imgName := imageToVerify.Image
 	cosign_Experimental := imageToVerify.TransparencyLog
-	//  return digest, deny, err
+	//  return common-name, digest, deny, err
 	glog.Infof("cosign_Experimental... %v", cosign_Experimental)
 	co := cosign.CheckOpts{
 		Claims: true,
@@ -84,8 +84,8 @@ func VerifyByPolicy(kWrapper kube.WrapperInterface, imageToVerify ImageToVerify)
 		digest := ss.Critical.Image.DockerManifestDigest
 		glog.Infof("digest %v", digest)
 
-		cm := vp.Cert.Subject.CommonName
-		return cm, digest, nil, nil
+		cn := vp.Cert.Subject.CommonName
+		return cn, digest, nil, nil
 	}
 	return "", "", nil, fmt.Errorf("SignedPayload is empty")
 }
