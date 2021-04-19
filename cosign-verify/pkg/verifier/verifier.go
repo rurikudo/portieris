@@ -23,8 +23,8 @@ import (
 	"github.com/golang/glog"
 )
 
-func Verifier(imageToVerify ImageToVerify) *VerifyResult {
-	kubeClientConfig := kube.GetKubeClientConfig()
+func Verifier(imageToVerify ImageToVerify, kubeconfig *string) *VerifyResult {
+	kubeClientConfig := kube.GetKubeClientConfig(kubeconfig)
 	kubeClientset := kube.GetKubeClient(kubeClientConfig)
 	kubeWrapper := kube.NewKubeClientsetWrapper(kubeClientset)
 	commonName, digest, deny, err := VerifyByPolicy(kubeWrapper, imageToVerify)

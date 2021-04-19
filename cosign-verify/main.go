@@ -18,6 +18,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"log"
 	"net/http"
 
@@ -25,11 +26,13 @@ import (
 	"github.com/golang/glog"
 )
 
+var kubeconfig *string = flag.String("kubeconfig", "", "location of kubeconfig file to use for an out-of-cluster kube client configuration")
+
 func CosignVerify(w http.ResponseWriter, r *http.Request) {
 	glog.Infof("cosign-verifier is called....")
 	var imageToVerify verifier.ImageToVerify
 	json.NewDecoder(r.Body).Decode(&imageToVerify)
-	vres := verifier.Verifier(imageToVerify)
+	vres := verifier.Verifier(imageToVerify, kubeconfig)
 	res, _ := json.Marshal(vres)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(res)
