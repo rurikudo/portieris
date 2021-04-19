@@ -5,4 +5,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: localhost:5000/portieris-operator
-  newTag: test
+  newTag: 0.0.1

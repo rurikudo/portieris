@@ -1,5 +1,5 @@
 //
-// Copyright 2020 IBM Corporation
+// Copyright 2021 IBM Corporation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,13 +24,10 @@ import (
 )
 
 func Verifier(imageToVerify ImageToVerify) *VerifyResult {
-	//  Verifier(imageToVerify ImageToVerify,kubeconfig *string)
-	// kubeconfig := flag.String("kubeconfig", "", "location of kubeconfig file to use for an out-of-cluster kube client configuration")
 	kubeClientConfig := kube.GetKubeClientConfig()
 	kubeClientset := kube.GetKubeClient(kubeClientConfig)
 	kubeWrapper := kube.NewKubeClientsetWrapper(kubeClientset)
 	commonName, digest, deny, err := VerifyByPolicy(kubeWrapper, imageToVerify)
-	glog.Infof("digest... %v", digest)
 	var err_s string
 	var deny_s string
 	if err != nil {
@@ -47,7 +44,6 @@ func Verifier(imageToVerify ImageToVerify) *VerifyResult {
 	}
 	e, err := json.Marshal(vres)
 	glog.Infof("VerifyResult... %v", string(e))
-	// glog.Infof("VerifyResult... %v", vres)
 	return vres
 }
 

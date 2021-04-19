@@ -7,7 +7,7 @@ metadata:
 spec:
   name: portieris
   enableCosignVerify: true
-  cosignVerifierImage: localhost:5000/cosign-verifier:0.0.12
+  cosignVerifierImage: localhost:5000/cosign-verifier:0.0.1
   allowAdmissionSkip: false
   IBMContainerService: false
   skipSecretCreation: false
@@ -43,7 +43,7 @@ spec:
     image: portieris
     pullPolicy: Always
     pullSecret: []
-    tag: cv7
+    tag: v0.10.1
   nodeSelector: {}
   replicaCount: 1
   resources:

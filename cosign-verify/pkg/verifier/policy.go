@@ -1,5 +1,5 @@
 //
-// Copyright 2020 IBM Corporation
+// Copyright 2021 IBM Corporation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Implementation of verify against containers/image policy interface
 
 package verifier
 
@@ -31,19 +30,21 @@ import (
 )
 
 func VerifyByPolicy(kWrapper kube.WrapperInterface, imageToVerify ImageToVerify) (string, string, error, error) {
+	//  return common-name, digest, deny, err
 	key := imageToVerify.Key
 	keyNamespace := imageToVerify.KeyNamespace
 	namespace := imageToVerify.Namespace
 	imgName := imageToVerify.Image
 	commonName := imageToVerify.CommonName
 	cosign_Experimental := imageToVerify.TransparencyLog
-	//  return common-name, digest, deny, err
-	glog.Infof("cosign_Experimental... %v", cosign_Experimental)
+	// cosign option
 	co := cosign.CheckOpts{
 		Claims: true,
 		Tlog:   cosign_Experimental,
 		Roots:  fulcio.Roots,
 	}
+	glog.Infof("cosign_Experimental... %v", cosign_Experimental)
+
 	if key != "" {
 		secretNamespace := namespace
 		// Override the default namespace behavior if a namespace was provided in this policy
@@ -60,10 +61,9 @@ func VerifyByPolicy(kWrapper kube.WrapperInterface, imageToVerify ImageToVerify)
 			return "", "", nil, err
 		}
 		co.PubKey = keyData
-		// glog.Infof("PublicKey... %v", keyData)
 	}
 
-	glog.Infof("imageToVerify... %v", imgName)
+	glog.Infof("image to verify: %v", imgName)
 	ref, err := name.ParseReference(imgName)
 	if err != nil {
 		return "", "", nil, err
@@ -71,7 +71,7 @@ func VerifyByPolicy(kWrapper kube.WrapperInterface, imageToVerify ImageToVerify)
 
 	verified, err := cosign.Verify(context.Background(), ref, co)
 	if err != nil {
-		glog.Infof("cosign.Verify err... %v", err)
+		glog.Infof("cosign verify err: %v", err)
 		return "", "", nil, err
 	}
 
@@ -83,7 +83,7 @@ func VerifyByPolicy(kWrapper kube.WrapperInterface, imageToVerify ImageToVerify)
 			return "", "", nil, err
 		}
 		digest := ss.Critical.Image.DockerManifestDigest
-		glog.Infof("digest %v", digest)
+		glog.Infof("digest: %v", digest)
 
 		cn := vp.Cert.Subject.CommonName
 		// check signer

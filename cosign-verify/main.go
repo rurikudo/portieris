@@ -1,5 +1,5 @@
 //
-// Copyright 2020 IBM Corporation
+// Copyright 2021 IBM Corporation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+
 package main
 
 import (
@@ -24,16 +25,12 @@ import (
 	"github.com/golang/glog"
 )
 
-// var kubeconfig *string = flag.String("kubeconfig", "", "location of kubeconfig file to use for an out-of-cluster kube client configuration")
-
 func CosignVerify(w http.ResponseWriter, r *http.Request) {
 	glog.Infof("cosign-verifier is called....")
 	var imageToVerify verifier.ImageToVerify
 	json.NewDecoder(r.Body).Decode(&imageToVerify)
-	// vres := verifier.Verifier(imageToVerify, kubeconfig)
 	vres := verifier.Verifier(imageToVerify)
 	res, _ := json.Marshal(vres)
-	// glog.Infof("cosign-verifier res.... %v", res)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(res)
 }
