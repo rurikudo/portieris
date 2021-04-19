@@ -28,11 +28,47 @@ import (
 
 var kubeconfig *string = flag.String("kubeconfig", "", "location of kubeconfig file to use for an out-of-cluster kube client configuration")
 
+type ImageToVerify struct {
+	Image           string `json:"image"`
+	Key             string `json:"key"`
+	KeyNamespace    string `json:"keyNamespace"`
+	TransparencyLog bool   `json:"transparencyLog"`
+}
+
+type VerifyResult struct {
+	Deny       string   `json:"deny"`
+	Err        string   `json:"err"`
+	Digest     string   `json:"digest"`
+	CommonName []string `json:"commonName"`
+}
+
 func CosignVerify(w http.ResponseWriter, r *http.Request) {
 	glog.Infof("cosign-verifier is called....")
-	var imageToVerify verifier.ImageToVerify
+	var imageToVerify ImageToVerify
 	json.NewDecoder(r.Body).Decode(&imageToVerify)
-	vres := verifier.Verifier(imageToVerify, kubeconfig)
+	// input
+	image := imageToVerify.Image
+	key := imageToVerify.Key
+	keyNamespace := imageToVerify.KeyNamespace
+	cosign_Experimental := imageToVerify.TransparencyLog
+	commonName, digest, deny, err := verifier.Verifier(image, key, keyNamespace, cosign_Experimental, kubeconfig)
+	// output
+	var err_s string
+	var deny_s string
+	if err != nil {
+		err_s = err.Error()
+	}
+	if deny != nil {
+		deny_s = deny.Error()
+	}
+	vres := &VerifyResult{
+		Deny:       deny_s,
+		Digest:     digest,
+		CommonName: commonName,
+		Err:        err_s,
+	}
+	e, err := json.Marshal(vres)
+	glog.Infof("VerifyResult... %v", string(e))
 	res, _ := json.Marshal(vres)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(res)

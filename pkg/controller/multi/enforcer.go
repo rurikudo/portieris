@@ -22,6 +22,7 @@ import (
 	"github.com/IBM/portieris/helpers/image"
 	policyv1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
 	"github.com/IBM/portieris/pkg/kubernetes"
+	cosign "github.com/IBM/portieris/pkg/verifier/cosign"
 	"github.com/IBM/portieris/pkg/verifier/simple"
 	notaryverifier "github.com/IBM/portieris/pkg/verifier/trust"
 	"github.com/IBM/portieris/pkg/verifier/vulnerability"
@@ -114,7 +115,7 @@ func (e enforcer) DigestByPolicy(namespace string, img *image.Reference, credent
 	// cosign
 	if policy.Cosign.Enabled != nil && *policy.Cosign.Enabled {
 		glog.Infof("policy.Cosign %v", policy.Cosign)
-		signer, digest, deny, err := cosignVerify(img.String(), namespace, policy.Cosign.Requirement, *policy.Cosign.TransparencyLog)
+		signer, digest, deny, err := cosign.CosignVerify(img.String(), namespace, policy.Cosign.Requirement, *policy.Cosign.TransparencyLog)
 		if err != nil {
 			return nil, nil, fmt.Errorf("cosign: %v", err)
 		}

@@ -19,10 +19,8 @@ RUN go build \
     -o /go/bin/main \
     -ldflags '-s -w'
 
-FROM ubuntu
+FROM alpine
 ENV DOCKER_CONFIG /tmp
 COPY --from=golang /go/bin/main /app/main
-RUN apt-get update
-# RUN apt-get install -y curl jq openssl
-RUN apt-get install -y openssl curl
+RUN apk add --update --no-cache ca-certificates tzdata openssl
 ENTRYPOINT ["/app/main"]

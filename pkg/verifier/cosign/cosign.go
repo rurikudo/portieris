@@ -14,7 +14,7 @@
 
 // Implementation of verify against containers/image policy interface
 
-package multi
+package cosign
 
 import (
 	"bytes"
@@ -33,28 +33,27 @@ const cosignVerifierUrl = "http://localhost:8081"
 
 type cosignVerifyInput struct {
 	Image              string `json:"image"`
-	Namespace          string `json:"namespace"`
 	Key                string `json:"key"`
 	KeySecretNamespace string `json:"keyNamespace"`
-	CommonName         string `json:"commonName"`
 	TransparencyLog    bool   `json:"transparencyLog"`
 }
 
 type cosignVerifyResult struct {
-	Deny       string `json:"deny"`
-	Err        string `json:"err"`
-	Digest     string `json:"digest"`
-	CommonName string `json:"commonName"`
+	Deny       string   `json:"deny"`
+	Err        string   `json:"err"`
+	Digest     string   `json:"digest"`
+	CommonName []string `json:"commonName"`
 }
 
-func cosignVerify(img string, namespace string, policy policyv1.CosignRequirement, transparencyLog bool) (string, *bytes.Buffer, error, error) {
+func CosignVerify(img string, namespace string, policy policyv1.CosignRequirement, transparencyLog bool) (string, *bytes.Buffer, error, error) {
 	cvInput := cosignVerifyInput{
 		Image:              img,
-		Namespace:          namespace,
 		Key:                policy.KeySecret,
 		KeySecretNamespace: policy.KeySecretNamespace,
-		CommonName:         policy.CommonName,
 		TransparencyLog:    transparencyLog,
+	}
+	if policy.KeySecretNamespace == "" {
+		cvInput.KeySecretNamespace = namespace
 	}
 	cosignVerifyInputJson, _ := json.Marshal(cvInput)
 
@@ -92,5 +91,19 @@ func cosignVerify(img string, namespace string, policy policyv1.CosignRequiremen
 	if cvres.Err != "" {
 		err_res = fmt.Errorf(cvres.Err)
 	}
-	return cvres.CommonName, digest_res, deny_res, err_res
+	cn, deny := checkCommonName(cvres.CommonName, policy.CommonName)
+	if deny != nil {
+		return "", nil, deny, nil
+	}
+	return cn, digest_res, deny_res, err_res
+}
+
+func checkCommonName(results []string, expected string) (string, error) {
+	for _, cn := range results {
+		if cn == expected {
+			return cn, nil
+		}
+	}
+	cn := strings.Join(results, ",")
+	return "", fmt.Errorf("Not match with CommonName in CosignRequirement %v: %v", cn, expected)
 }

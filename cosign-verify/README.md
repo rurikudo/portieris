@@ -15,7 +15,6 @@ $ pwd
 make image
 docker tag portieris:v0.10.1 localhost:5000/portieris:v0.10.1
 docker push localhost:5000/portieris:v0.10.1
-docker push 
 ```
 2. Build cosign verifier image
 ```

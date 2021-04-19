@@ -29,14 +29,8 @@ import (
 	"github.com/sigstore/sigstore/pkg/signature/payload"
 )
 
-func VerifyByPolicy(kWrapper kube.WrapperInterface, imageToVerify ImageToVerify) (string, string, error, error) {
-	//  return common-name, digest, deny, err
-	key := imageToVerify.Key
-	keyNamespace := imageToVerify.KeyNamespace
-	namespace := imageToVerify.Namespace
-	imgName := imageToVerify.Image
-	commonName := imageToVerify.CommonName
-	cosign_Experimental := imageToVerify.TransparencyLog
+func VerifyByCosign(kWrapper kube.WrapperInterface, imgName, key, keyNamespace string, cosign_Experimental bool) ([]string, string, error, error) {
+	//  return commonName, digest, deny, err
 	// cosign option
 	co := cosign.CheckOpts{
 		Claims: true,
@@ -46,19 +40,15 @@ func VerifyByPolicy(kWrapper kube.WrapperInterface, imageToVerify ImageToVerify)
 	glog.Infof("cosign_Experimental... %v", cosign_Experimental)
 
 	if key != "" {
-		secretNamespace := namespace
-		// Override the default namespace behavior if a namespace was provided in this policy
-		if keyNamespace != "" {
-			secretNamespace = keyNamespace
-		}
+		secretNamespace := keyNamespace
 		secretBytes, err := kWrapper.GetSecretKey(secretNamespace, key)
 		if err != nil {
-			return "", "", nil, err
+			return nil, "", nil, err
 		}
 
 		keyData, err := decodeArmoredKey(secretBytes)
 		if err != nil {
-			return "", "", nil, err
+			return nil, "", nil, err
 		}
 		co.PubKey = keyData
 	}
@@ -66,32 +56,34 @@ func VerifyByPolicy(kWrapper kube.WrapperInterface, imageToVerify ImageToVerify)
 	glog.Infof("image to verify: %v", imgName)
 	ref, err := name.ParseReference(imgName)
 	if err != nil {
-		return "", "", nil, err
+		return nil, "", nil, err
 	}
 
 	verified, err := cosign.Verify(context.Background(), ref, co)
 	if err != nil {
 		glog.Infof("cosign verify err: %v", err)
-		return "", "", nil, err
+		return nil, "", nil, err
 	}
 
+	if len(verified) == 0 {
+		glog.Infof("[]cosign.SignedPayload is empty: no valid signature")
+		return nil, "", fmt.Errorf("no valid signature"), nil
+	}
+
+	var commonNames []string
+	var digest string
 	for _, vp := range verified {
 		ss := payload.Simple{}
 		err := json.Unmarshal(vp.Payload, &ss)
 		if err != nil {
 			fmt.Println("error decoding the payload:", err.Error())
-			return "", "", nil, err
+			return nil, "", nil, err
 		}
-		digest := ss.Critical.Image.DockerManifestDigest
+		digest = ss.Critical.Image.DockerManifestDigest
 		glog.Infof("digest: %v", digest)
 
 		cn := vp.Cert.Subject.CommonName
-		// check signer
-		if commonName != cn {
-			glog.Infof("Not match with CommonName in CosignRequirement %v: %v", commonName, cn)
-			return cn, digest, fmt.Errorf("Not match with CommonName in CosignRequirement %v: %v", commonName, cn), nil
-		}
-		return cn, digest, nil, nil
+		commonNames = append(commonNames, cn)
 	}
-	return "", "", fmt.Errorf("SignedPayload is empty"), nil
+	return commonNames, digest, nil, nil
 }
