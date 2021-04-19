@@ -616,6 +616,10 @@ spec:
               items:
                 type: string
               type: array
+            cosignVerifierImage:
+              type: string
+            enableCosignVerify:
+              type: boolean
             image:
               properties:
                 host:

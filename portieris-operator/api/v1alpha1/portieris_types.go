@@ -53,6 +53,8 @@ type PortierisSpec struct {
 	AllowAdmissionSkip         bool                    `json:"allowAdmissionSkip,omitempty"`
 	AllowedRepositories        []string                `json:"allowedRepositories,omitempty"`
 	SecurityContextConstraints bool                    `json:"securityContextConstraints,omitempty"`
+	EnableCosignVerify         bool                    `json:"enableCosignVerify,omitempty"`
+	CosignVerifierImage        string                  `json:"cosignVerifierImage,omitempty"`
 }
 
 type Image struct {

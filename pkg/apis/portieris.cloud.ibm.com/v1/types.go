@@ -91,10 +91,25 @@ type Repository struct {
 
 // Policy .
 type Policy struct {
+	Cosign        Cosign        `json:"cosign,omitempty"`
 	Trust         Trust         `json:"trust,omitempty"`
 	Simple        Simple        `json:"simple,omitempty"`
 	Vulnerability Vulnerability `json:"vulnerability,omitempty"`
 	MutateImage   *bool         `json:"mutateImage,omitempty"`
+}
+
+// Cosign
+type Cosign struct {
+	Enabled         *bool             `json:"enabled,omitempty"`
+	TransparencyLog *bool             `json:"transparencyLog,omitempty"`
+	Requirement     CosignRequirement `json:"requirement"`
+}
+
+// CosignRequirement .
+type CosignRequirement struct {
+	CommonName         string `json:"commonName,omitEmpty"`
+	KeySecret          string `json:"keySecret,omitEmpty"`
+	KeySecretNamespace string `json:"keySecretNamespace,omitEmpty"`
 }
 
 // Trust .

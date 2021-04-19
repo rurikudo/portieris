@@ -22,6 +22,7 @@ import (
 	"github.com/IBM/portieris/helpers/image"
 	policyv1 "github.com/IBM/portieris/pkg/apis/portieris.cloud.ibm.com/v1"
 	"github.com/IBM/portieris/pkg/kubernetes"
+	cosign "github.com/IBM/portieris/pkg/verifier/cosign"
 	"github.com/IBM/portieris/pkg/verifier/simple"
 	notaryverifier "github.com/IBM/portieris/pkg/verifier/trust"
 	"github.com/IBM/portieris/pkg/verifier/vulnerability"
@@ -57,6 +58,7 @@ func NewEnforcer(kubeClientsetWrapper kubernetes.WrapperInterface, nv *notaryver
 }
 
 func (e enforcer) DigestByPolicy(namespace string, img *image.Reference, credentials credential.Credentials, policy *policyv1.Policy) (*bytes.Buffer, error, error) {
+	glog.Infof("policy %v", policy)
 	// no policy indicates admission should be allowed, without mutation
 	if policy == nil {
 		return nil, nil, nil
@@ -110,6 +112,19 @@ func (e enforcer) DigestByPolicy(namespace string, img *image.Reference, credent
 		}
 	}
 
+	// cosign
+	if policy.Cosign.Enabled != nil && *policy.Cosign.Enabled {
+		glog.Infof("policy.Cosign %v", policy.Cosign)
+		signer, digest, deny, err := cosign.CosignVerify(img.String(), namespace, policy.Cosign.Requirement, *policy.Cosign.TransparencyLog)
+		if err != nil {
+			return nil, nil, fmt.Errorf("cosign: %v", err)
+		}
+		if deny != nil {
+			return nil, fmt.Errorf("cosign: policy denied the request: %v", deny), nil
+		}
+		glog.Infof("image: %v is signed by %v", img.String(), signer)
+		glog.Infof("digest: %v", digest)
+	}
 	return digest, nil, nil
 }
 
