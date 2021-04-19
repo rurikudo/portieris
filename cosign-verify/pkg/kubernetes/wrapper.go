@@ -29,7 +29,6 @@ var _ WrapperInterface = &Wrapper{}
 // WrapperInterface is the interface for a wrapper around kubeclientset that includes some helper functions for applying behaviour to kube resources
 type WrapperInterface interface {
 	kubernetes.Interface
-	GetSecretToken(namespace, secretName, registry string) (string, string, error)
 	GetSecretKey(namespace, secretName string) ([]byte, error)
 }
 
