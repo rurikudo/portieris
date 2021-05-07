@@ -87,9 +87,11 @@ func CosignVerify(img string, namespace string, policy policyv1.CosignRequiremen
 	var err_res error
 	if cvres.Deny != "" {
 		deny_res = fmt.Errorf(cvres.Deny)
+		return "", nil, deny_res, nil
 	}
 	if cvres.Err != "" {
 		err_res = fmt.Errorf(cvres.Err)
+		return "", nil, nil, fmt.Errorf(cvres.Err)
 	}
 	cn, deny := checkCommonName(cvres.CommonName, policy.CommonName)
 	if deny != nil {
