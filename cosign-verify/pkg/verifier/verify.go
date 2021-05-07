@@ -32,7 +32,7 @@ import (
 func VerifyByCosign(kWrapper kube.WrapperInterface, imgName, key, keyNamespace string, cosign_Experimental bool) ([]string, string, error, error) {
 	//  return commonName, digest, deny, err
 	// cosign option
-	co := cosign.CheckOpts{
+	co := &cosign.CheckOpts{
 		Claims: true,
 		Tlog:   cosign_Experimental,
 		Roots:  fulcio.Roots,
@@ -73,7 +73,7 @@ func VerifyByCosign(kWrapper kube.WrapperInterface, imgName, key, keyNamespace s
 	var commonNames []string
 	var digest string
 	for _, vp := range verified {
-		ss := payload.Simple{}
+		ss := payload.SimpleContainerImage{}
 		err := json.Unmarshal(vp.Payload, &ss)
 		if err != nil {
 			fmt.Println("error decoding the payload:", err.Error())
